@@ -1,0 +1,160 @@
+batleship
+
+> Trying to connect to localhost on 54321
+> Welcome to Battleships
+> your id is: foxylady
+> remember this is you want to resume this game
+
+    1   2   3   4   5   6
+a |   |   |   |   |   |   | 
+b |   |   |   |   |   |   | 
+c |   |   |   |   |   |   | 
+d |   |   |   |   |   |   | 
+e |   |   |   |   |   |   | 
+f |   |   |   |   |   |   | 
+
+> where u want to place the Submarine \__/: a1
+> orientation h or v: h
+> can't do that
+> orientation h or v: v
+
+    1   2   3   4   5   6
+a | s |   |   |   |   |   | 
+b |   |   |   |   |   |   | 
+c |   |   |   |   |   |   | 
+d |   |   |   |   |   |   | 
+e |   |   |   |   |   |   | 
+f |   |   |   |   |   |   | 
+
+
+> where u want to place the Cruiser \__/: f2
+> orientation h or v: h
+
+    1   2   3   4   5   6
+a | s |   |   |   |   |   | 
+b |   |   |   |   |   |   | 
+c |   |   |   |   |   |   | 
+d |   |   |   |   |   |   | 
+e |   |   |   |   |   |   | 
+f |   | c | c |   |   |   |
+  
+> where u want to place the Destroyer  \___/: d4
+> orientation h or v: v
+
+    1   2   3   4   5   6
+a | s |   |   |   |   |   | 
+b |   |   |   | d |   |   | 
+c |   |   |   | d |   |   | 
+d |   |   |   | d |   |   | 
+e |   |   |   |   |   |   | 
+f |   | c | c |   |   |   |
+
+> where u want to place the Destroyer BattleShip \____/: a3
+> orientation h or v: h
+
+    1   2   3   4   5   6
+a | s |   | b | b | b | b |  
+b |   |   |   | d |   |   |  
+c |   |   |   | d |   |   |  
+d |   |   |   | d |   |   |  
+e |   |   |   |   |   |   |  
+f |   | c | c |   |   |   |  
+
+> Waiting for player 2
+> player 2 connected
+> All set
+> Flipping coin
+
+Your Board                        Your Enemy's Board
+    1   2   3   4   5   6             1   2   3   4   5   6     
+a | s |   | b | b | b | b |       a |   |   |   |   |   |   |  
+b |   |   |   | d |   |   |       b |   |   |   |   |   |   |  
+c |   |   |   | d |   |   |       c |   |   |   |   |   |   |  
+d |   |   |   | d |   |   |       d |   |   |   |   |   |   |  
+e |   |   |   |   |   |   |       e |   |   |   |   |   |   |  
+f |   | c | c |   |   |   |       f |   |   |   |   |   |   |
+
+> Your turn, where u wanna fire? a3
+> bummm you hit something
+
+Your Board                        Your Enemy's Board
+    1   2   3   4   5   6             1   2   3   4   5   6     
+a | s |   | b | b | b | b |       a |   |   | * |   |   |   |  
+b |   |   |   | d |   |   |       b |   |   |   |   |   |   |  
+c |   |   |   | d |   |   |       c |   |   |   |   |   |   |  
+d |   |   |   | d |   |   |       d |   |   |   |   |   |   |  
+e |   |   |   |   |   |   |       e |   |   |   |   |   |   |  
+f |   | c | c |   |   |   |       f |   |   |   |   |   |   |
+
+> Your turn, where u wanna fire? f2
+> you missed
+
+Your Board                        Your Enemy's Board
+    1   2   3   4   5   6             1   2   3   4   5   6     
+a | s |   | b | b | b | b |       a |   |   | * |   |   |   |  
+b |   |   |   | d |   |   |       b |   |   |   |   |   |   |  
+c |   |   |   | d |   |   |       c |   |   |   |   |   |   |  
+d |   |   |   | d |   |   |       d |   |   |   |   |   |   |  
+e |   |   |   |   |   |   |       e |   |   |   |   |   |   |  
+f |   | c | c |   |   |   |       f |   | o |   |   |   |   |
+
+> Waiting enemy to shoot
+> Enemy shot and hit you
+
+Your Board                        Your Enemy's Board
+    1   2   3   4   5   6             1   2   3   4   5   6     
+a | s |   | b | b | x | b |       a |   |   | * |   |   |   |  
+b |   |   |   | d |   |   |       b |   |   |   |   |   |   |  
+c |   |   |   | d |   |   |       c |   |   |   |   |   |   |  
+d |   |   |   | d |   |   |       d |   |   |   |   |   |   |  
+e |   |   |   |   |   |   |       e |   |   |   |   |   |   |  
+f |   | c | c |   |   |   |       f |   | o |   |   |   |   |
+
+> Waiting enemy to shoot
+> Enemy shot and sank your submarine
+
+Your Board                        Your Enemy's Board
+    1   2   3   4   5   6             1   2   3   4   5   6     
+a | S |   | b | b | x | b |       a |   |   | x |   |   |   |  
+b |   |   |   | d |   |   |       b |   |   |   |   |   |   |  
+c |   |   |   | d |   |   |       c |   |   |   |   |   |   |  
+d |   |   |   | d |   |   |       d |   |   |   |   |   |   |  
+e |   |   |   |   |   |   |       e |   |   |   |   |   |   |  
+f |   | c | c |   |   |   |       f |   | o |   |   |   |   |
+
+> Waiting enemy to shoot
+> Enemy shot and 
+
+
+a couple of minutes later....
+
+> Waiting enemy to shoot
+> Enemy shot and miss on cell c2
+
+Your Board                        Your Enemy's Board
+    1   2   3   4   5   6             1   2   3   4   5   6     
+a | S |   | b | x | x | b |       a |   |   | x | x | x |   |  
+b |   |   |   | d |   |   |       b |   |   |   |   |   |   |  
+c |   | o |   | x |   |   |       c | S |   | o | C |   |   |  
+d |   |   |   | x |   |   |       d |   |   |   | C |   |   |  
+e | o |   |   |   |   |   |       e | D | D | D |   | o |   |  
+f |   | c | c |   |   |   |       f |   | o |   |   |   |   |
+
+> Your
+> Your turn, where u wanna fire? b6
+> bummm you sank the Battle ship
+
+Your Board                        Your Enemy's Board
+    1   2   3   4   5   6             1   2   3   4   5   6     
+a | S |   | b | x | x | b |       a |   |   | B | B | B | B |  
+b |   |   |   | d |   |   |       b |   |   |   |   |   |   |  
+c |   | o |   | x |   |   |       c | S |   | o | C |   |   |  
+d |   |   |   | x |   |   |       d |   |   |   | C |   |   |  
+e | o |   |   |   |   |   |       e | D | D | D |   | o |   |  
+f |   | c | c |   |   |   |       f |   | o |   |   |   |   |
+
+> you win!
+
+> Wanna play again? yes or no: no
+> bye
+[connection closed]

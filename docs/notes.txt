@@ -1,0 +1,84 @@
+CLI -> BattleShip (play locally)
+		-> SocketsCom, Protocol (play)
+		
+GUI -> BattleShip 
+						
+
+Server
+**********************************************************************************
+
+java BattleShipsServer port
+
+> Started listening to port xxxxx
+
+Client
+
+**********************************************************************************
+
+location states perspective 2: empty, ship, shipdown
+
+location states perspective 2: empty, ship, hit, miss, sank
+
+**********************************************************************************
+GameRules
+
+All the rules of the game are here
+Doesn't keep state of game
+
+Turns Rules:
+  - fire only if player has turn:  
+    * p1 has turn, p2 makes guess, error
+    * p1 has turn, p1 makes guess, ok
+    * p2 has turn, p2 makes guess, error
+    * p2 has turn, p1 makes guess, ok
+    
+  - Player can fire "not fired before" loc
+      Given p1 has turn
+        and state of loc(1,1) on p2 grid is not miss
+      When p1 fires loc(1, 1)
+      Then loc(1, 1) state of p2 should be miss or taken
+        
+
+Positioning Rules
+
+- All ships inside grid
+
+- no ship overlap
+
+
+Fire Rules
+- 
+
+Hit Rules
+
+Win Rules
+
+**********************************************************************************
+
+Ship names: battle ship, cruizer, destroyer, submarine
+
+**********************************************************************************
+CLI arguments:
+
+java BattleShipClient -h host -p port -s
+
+batleship 
+  options:
+    -r  resume game
+    -h  host
+    -p  port
+    -v  Viewer
+    
+**********************************************************************************
+    
+java -Dfile.encoding=MacRoman -classpath /Users/vic/rmit/sadi/code/battleships/bin:/Users/vic/rmit/sadi/code/battleships/lib/commons-cli-1.2.jar:/Users/vic/rmit/sadi/code/battleships/lib/junit-4.8.2.jar server.BattleShipsServer
+
+java
+-Dfile.encoding=MacRoman
+-classpath  /Users/vic/rmit/sadi/code/battleships/bin:
+            /Users/vic/rmit/sadi/code/battleships/lib/commons-cli-1.2.jar:
+            /Users/vic/rmit/sadi/code/battleships/lib/junit-4.8.2.jar
+            server.BattleShipsServer
+            
+**********************************************************************************
+

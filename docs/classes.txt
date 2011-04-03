@@ -1,0 +1,24 @@
+BattleShipState:
+  Player player1
+  Player Player2
+  Player playerWithTurn
+  Board player2Board
+  Board player2Board
+  Player winner
+  
+  String status
+    waiting_for_players_to_join
+    game_in_progress
+    pause
+    finish
+    
+  Player state
+    not_joined
+    positioning_ships
+    turn_to_fire
+  
+  String PlayerState = positioning_ships, turn_to_fire
+  
+  
+  
+
