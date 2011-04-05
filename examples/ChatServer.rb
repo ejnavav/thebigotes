@@ -3,8 +3,12 @@ require 'socket'
 server = TCPServer.open(56789)   # Socket to listen on port 2000
 clients = [];
 
+puts "Server started"
+# Process.daemon()
+
 loop do
   clients << server.accept
+  puts "A client connected"
   Thread.start(clients) do |clients|
     client = clients.last
     nick = client.gets.chop

@@ -1,10 +1,10 @@
 package server;
 
-import java.util.*;
-
 public class BattleShipsServer {
 
+	
 	private Communicator communicator;
+	
 	private int port;
 
 	public BattleShipsServer(int port) {

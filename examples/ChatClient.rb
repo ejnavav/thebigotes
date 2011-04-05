@@ -1,10 +1,11 @@
 require 'socket'      # Sockets are in standard library
 
+port = 56789
+
+# puts "Enter host name:"
+# host = gets.chop
 # host = 'localhost'
 host = 'yallara.cs.rmit.edu.au'
-# puts "Enter host name:"
-# host = gets.strip
-port = 56789
 
 socket = TCPSocket.open(host, port)
 
