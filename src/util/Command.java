@@ -35,11 +35,5 @@ public class Command {
 			builder.append(delimiter);
 		}
 		return builder.toString();
-	}
-		
-	public static void main(String[] args) {
-		HashMap<String, String> command = parse("command:join&options:p,v");
-		System.out.println(command);
-		System.out.println(toString(command));
 	}	
 }
