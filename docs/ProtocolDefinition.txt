@@ -1,5 +1,6 @@
-
-Format: command:fire&options:a3,b4,c2,d1,f1&
+Example commands:
+command:join&options:p,v
+command:fire&options:a3,b4,c2,d1,f1&
 
 PlayerClient
   int join(options) //player number

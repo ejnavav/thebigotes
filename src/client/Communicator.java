@@ -2,22 +2,21 @@ package client;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
+//import java.util.*;
 
 public class Communicator {
 	String host;
 	int port;
 	Socket socket = null;
 	PrintWriter out = null;
-	// Scanner in = null;
 	BufferedReader in = null;
 
-	
+
 	public Communicator(String host, int port) {
 		this.host = host;
 		this.port = port;
 	}
-	
+
 	public boolean connect() {
 		try {
 			socket = new Socket(host, port);
@@ -42,7 +41,7 @@ public class Communicator {
 			System.err.println(e.getMessage());
 		}
 	}
-	
+
 	public String getLastMessage(){
 		System.out.println("getLastMessage()");
 		String msg = getMessage();
@@ -54,7 +53,7 @@ public class Communicator {
 		System.out.println("getLastMessage() > "+lastMsg);
 		return lastMsg;
 	}
-	
+
 	public String getMessage(){
 		System.out.println("getMessage()");
 		String msg = null;
@@ -68,7 +67,7 @@ public class Communicator {
 		System.out.println("getMessage() > "+msg);
 		return msg;
 	}
-	
+
 	public String waitForMessage(){
 		String msg = null;
 		try{
@@ -77,6 +76,14 @@ public class Communicator {
 			System.err.println(e.getMessage());
 		}
 		return msg;
+	}
+
+	public void sendMessage(String message){
+		try {
+			out.println(message);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 
 	public static void main(String[] args) {
