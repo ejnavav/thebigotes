@@ -7,7 +7,8 @@ PlayerClient
   void draw()       //board with ships
   void message()    //board with ships
   location fire()
-  
+
+BattleshipsController
 
 
 FIRE COMMAND

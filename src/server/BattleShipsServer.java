@@ -33,7 +33,7 @@ public class BattleShipsServer {
 		BattleShipsServer server = new BattleShipsServer(54321);
 	    server.start();
 		gameController = new test.BattleshipsController();
-
+		
 //		while (true) {
 //			System.out.println("Client ID");
 //			Scanner input = new Scanner(System.in);
@@ -48,12 +48,9 @@ public class BattleShipsServer {
 //			}
 //
 //		}
-
 	}
 
 	public static void newClientConnected(Client client) {
 		gameController.newClientArrived(client);
-	}
-	
-	
+	}	
 }

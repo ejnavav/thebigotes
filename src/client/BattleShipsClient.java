@@ -2,47 +2,14 @@ package client;
 import java.io.*;
 import java.util.*;
 
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
-
-class BattleShipCli {
-	public static void main(String[] args) {
-		String player1 = "_o____s__dd__b_____b_o___b__x__b_o__";
-		String player2 = "____so_xo____x_o_______x__bbbbo_____";
-		drawGrid(player1,player2);
-
-//		System.out.println("-h\tDisplay help");
-//
-//		// System.exit(1);
-//		// Scanner stdin = new Scanner(System.in);
-//		// Scanner stdin = new Scanner(System.in);
-//
-//		// System.out.println(stdin.next());
-//
-//		// 
-//		// // System.out.println("rrrrrrrruuuuuuuuunnnnnnniiiiiiinnnnnnnnn");
-//		// // System.out.flush();
-//		// // System.exit(0);
-//		// 
-//		// for (int i = 0; i < 5;i++ ){
-//		// 		try {
-//		// 			String str = stdin.next();
-//		// 			System.out.println(str);
-//		// 		} catch (Exception e) {
-//		// 			System.out.println(e.getMessage());
-//		// 			System.exit(1);
-//		// 		}
-//		// 	}
-		Comunicator comunicator = new Comunicator();
-		comunicator.startClient();
-		Scanner scanner = new Scanner(System.in);
-		while (true){
-//			System.out.println("Enter a Command: ");
-//			String msg = scanner.nextLine();
-//			comunicator.sendMessage(msg);
-			System.out.println("Command Received from Server: "+comunicator.receiveMesssage());
-		}
+class BattleShipsClient {
+	
+	Communicator server = null;
+	
+	public BattleShipsClient(String host, int port){
+ 		server = new Communicator(host, port);
 	}
+
 	public static void drawGrid(String player1,String player2){
 		player1 = player1.replace('_',' ');
 		player2 = player2.replace('_',' ');
@@ -82,5 +49,52 @@ class BattleShipCli {
 			}
 		}
 		System.out.println(printString);
+	}
+	
+	// public void testDrawGrid(){
+	// 	String player1 = "_o____s__dd__b_____b_o___b__x__b_o__";
+	// 	String player2 = "____so_xo____x_o_______x__bbbbo_____";
+	// 	drawGrid(player1,player2);
+	// 
+	// 	System.out.println("-h\tDisplay help");
+	// 
+	// 	System.exit(1);
+	// 		Scanner stdin = new Scanner(System.in);
+	// 		Scanner stdin = new Scanner(System.in);
+	// 
+	// 		System.out.println(stdin.next());
+	// 
+	// 		
+	// 		// System.out.println("rrrrrrrruuuuuuuuunnnnnnniiiiiiinnnnnnnnn");
+	// 		// System.out.flush();
+	// 		// System.exit(0);
+	// 		
+	// 		for (int i = 0; i < 5;i++ ){
+	// 				try {
+	// 					String str = stdin.next();
+	// 					System.out.println(str);
+	// 				} catch (Exception e) {
+	// 					System.out.println(e.getMessage());
+	// 					System.exit(1);
+	// 				}
+	// 			}
+	// 		Comunicator comunicator = new Comunicator();
+	// 		comunicator.startClient();
+	// 		Scanner scanner = new Scanner(System.in);
+	// 		while (true){
+	// 		System.out.println("Enter a Command: ");
+	// 		String msg = scanner.nextLine();
+	// 		comunicator.sendMessage(msg);
+	// 		System.out.println("Command Received from Server: "+comunicator.receiveMesssage());
+	// 	}
+	// }
+	
+	public static void main(String[] args) {
+		System.out.println("Client started");
+		// String host = "localhost";
+		String host = "10.1.1.6"
+		BattleShipsClient client = new BattleShipsClient(host, 54321);
+		client.server.connect();
+		System.out.println(client.server.waitForMessage());
 	}
 }
