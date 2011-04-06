@@ -18,23 +18,23 @@ public class Client {
 		} catch (Exception e) {
 
 		}
-		ClientListener clientListener = new ClientListener(socket);
+		ClientListener clientListener = new ClientListener(this,socket);
 		clientListener.start();
 	}
 
-	public String sendCommand(String command) throws Exception {
+	public void sendCommand(String command) {
 		out.println(command);
-		String input = null;
-		try {
-			while (true) {
-				input = in.readLine();
-				//System.out.println("Received " + input);
-				if (input.length() > 0)
-					return input;
-			}
-		} catch (Exception e) {
-			throw e ;//System.out.println(e);
-		}
+//		String input = null;
+//		try {
+//			while (true) {
+//				input = in.readLine();
+//				//System.out.println("Received " + input);
+//				if (input.length() > 0)
+//					return input;
+//			}
+//		} catch (Exception e) {
+//			throw e ;//System.out.println(e);
+//		}
 
 	}
 }

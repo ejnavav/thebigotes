@@ -18,9 +18,9 @@ public class BattleshipsController {
 		try {
 			String command = "command:join";
 			System.out.println("Sent From Server: " + command);
-			System.out.println("Received from Client: "
-					+ client.sendCommand(command));
-
+			client.sendCommand(command);
+//			System.out.println("Received from Client: "
+//					+ client.sendCommand(command));
 			clients.add(client);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -39,6 +39,9 @@ public class BattleshipsController {
 			joinPlayer(client);
 			break;
 		}
+	}
+	public void processClientCommand(server.Client client,String command){
+		
 	}
 
 }

@@ -36,8 +36,7 @@ public class Command {
 		}
 		return builder.toString();
 	}
-	
-	
+		
 	public static void main(String[] args) {
 		HashMap<String, String> command = parse("command:join&options:p,v");
 		System.out.println(command);
