@@ -58,4 +58,5 @@ public class Board {
 	public void fire (int position){
 		
 	}
+
 }

@@ -19,6 +19,7 @@ public class BattleshipsController {
 	public void joinPlayer(Client client, String clientType) {
 		client.setType(clientType);
 		clients.add(client);
+		//TODO Verify Client Type
 		if (state.equals(gameState.WAITING) && clients.size() == 2) {
 				state = gameState.POSITIONING;
 		}
@@ -71,7 +72,7 @@ public class BattleshipsController {
 			command = parseBatFakePositionCommand();
 		}
 
-		
+		//TODO Verify Game States to process commands
 		if (command.get("command").equals("join")){
 			String clientType = command.get("as");
 			joinPlayer(client,clientType);
@@ -99,7 +100,7 @@ public class BattleshipsController {
 			sendCommand(client,fakeBattleshipPositionCommand());
 		}
 		if (shipType.equalsIgnoreCase("battleship")){
-			
+			sendCommand(client,"wait");
 		}
 
 	}

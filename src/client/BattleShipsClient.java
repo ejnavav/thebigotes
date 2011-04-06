@@ -33,7 +33,7 @@ class BattleShipsClient {
 //		// 			System.exit(1);
 //		// 		}
 //		// 	}
-		Comunicator comunicator = new Comunicator();
+		Communicator comunicator = new Communicator();
 		comunicator.startClient();
 		//Scanner scanner = new Scanner(System.in);
 		while (true){
