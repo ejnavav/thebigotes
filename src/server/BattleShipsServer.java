@@ -55,5 +55,8 @@ public class BattleShipsServer {
 		gameController.newClientArrived(client);
 	}
 	
+	public static void processClientCommand(Client client, String command){
+		gameController.processClientCommand(client,command);
+	}
 	
 }

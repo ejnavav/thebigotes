@@ -5,7 +5,7 @@ import java.util.*;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 
-class BattleShipCli {
+class BattleShipsClient {
 	public static void main(String[] args) {
 		String player1 = "_o____s__dd__b_____b_o___b__x__b_o__";
 		String player2 = "____so_xo____x_o_______x__bbbbo_____";
@@ -35,12 +35,16 @@ class BattleShipCli {
 //		// 	}
 		Comunicator comunicator = new Comunicator();
 		comunicator.startClient();
-		Scanner scanner = new Scanner(System.in);
+		//Scanner scanner = new Scanner(System.in);
 		while (true){
 //			System.out.println("Enter a Command: ");
 //			String msg = scanner.nextLine();
 //			comunicator.sendMessage(msg);
-			System.out.println("Command Received from Server: "+comunicator.receiveMesssage());
+			String msgFromServer = comunicator.receiveMesssage();
+			System.out.println("Command Received from Server: "+msgFromServer);
+			String response = msgFromServer + "&Reply"; 
+			comunicator.sendMessage(response);
+			
 		}
 	}
 	public static void drawGrid(String player1,String player2){

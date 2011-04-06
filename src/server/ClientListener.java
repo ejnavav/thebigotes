@@ -6,6 +6,7 @@ import java.io.*;
 public class ClientListener extends Thread {
 Socket socket;
 BufferedReader in;
+Client client;
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -15,7 +16,8 @@ BufferedReader in;
 			socket.getInputStream()));
 		while (true){
 			String input = in.readLine();
-			System.out.println("Received "+ input);
+//			System.out.println("Received hh "+ input);
+			if (input.length()>0) BattleShipsServer.processClientCommand(this.client,input);
 		}
 		}catch(Exception e){
 			System.out.println(e);
@@ -23,8 +25,9 @@ BufferedReader in;
 
 
 	}
-	public ClientListener(Socket socket){
+	public ClientListener(Client client,Socket socket){
 		this.socket = socket;
+		this.client = client;
 	}
 	
 
