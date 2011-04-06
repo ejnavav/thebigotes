@@ -1,7 +1,6 @@
 package server;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.*;
@@ -11,7 +10,7 @@ public class Client {
 	PrintWriter out;
 	BufferedReader in;
 	private String type;
-	ArrayList<Ship> ships;
+
 	Board board;
 
 	public Client(Socket socket) {
@@ -25,6 +24,8 @@ public class Client {
 		ClientListener clientListener = new ClientListener(this,socket);
 		clientListener.start();
 		System.out.println("After Thread Start");
+		
+		this.board = new Board();
 	}
 
 	public void sendCommand(String command) throws Exception {
@@ -42,8 +43,14 @@ public class Client {
 //		}
 
 	}
-	public void addShip(Ship ship){
-		this.ships.add(ship);
+	public void addShip(String shipType,String orientation, int position ){
+		try{
+			board.placeShip(shipType,orientation,position);
+		}catch(Exception e){
+			//TODO Create Proper exception
+			e.printStackTrace();
+		}
+		
 	}
 	public String getType() {
 		return type;

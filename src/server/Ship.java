@@ -2,7 +2,7 @@ package server;
 import java.util.* ;
 
 public class Ship {
-	// private static String types[] = { "battleship", "cruizer", "destroyer", "submarine" }
+	// private static String types[] = { "battleship", "cruiser", "destroyer", "submarine" }
 	private HashMap<String, Integer> types = new HashMap<String, Integer>();
 	private int size;
 	private String type;
@@ -30,4 +30,8 @@ public class Ship {
 	public String getType() { return type; }
 	
 	public int getPosition() {return position;}
+	
+	public String getLetter(){
+		return this.type.substring(0,1);
+	}
 }

@@ -39,7 +39,6 @@ public class BattleshipsController {
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			
 			e.printStackTrace();
 		}
 	}
@@ -87,8 +86,8 @@ public class BattleshipsController {
 		String shipType = command.get("ship");
 		int position = Integer.parseInt(command.get("position"));
 		String orientation = command.get("orientation");
-		Ship ship = new Ship(shipType,orientation,position);
-		client.addShip(ship);
+//		Ship ship = new Ship(shipType,orientation,position);
+		client.addShip(shipType,orientation,position);
 		
 		if (shipType.equalsIgnoreCase("submarine")){
 			sendCommand(client,fakeCruiserPositionCommand());

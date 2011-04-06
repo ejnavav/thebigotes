@@ -1,30 +1,42 @@
 package server;
 import java.math.*;
+import java.util.*;
 public class Board {
 	private int size = 6;
 	String[] cells = new String[size*size];
+	ArrayList<Ship> ships = new ArrayList<Ship>();
+	
 	public Board(){	
 		for (int i =0; i<cells.length ; i++){
 			cells[i]="#";
 		}
 	}
 	
-	public void placeShip(Ship ship) throws Exception{
-		verifyBounds(ship);
-		verifyClash(ship);
-	}
-	private boolean verifyClash(Ship ship){
+	public void placeShip(String shipType,String orientation, int position) throws Exception{
+		Ship ship = new Ship(shipType,orientation,position);
 		int shipSize = ship.getSize();
-		int position = ship.getPosition();
-		String orientation = ship.getOrientation();
-		int increment = orientation.equalsIgnoreCase("h")? 1:this.size;
 		
-		return false;
+		if (!verifyBounds(shipSize,position,orientation) || !verifyClash(shipSize,position,orientation)){
+			throw new Exception("Ship Can't be placed there");
+		}
+		ships.add(ship);
+		int increment = orientation.equalsIgnoreCase("h")? 1:this.size;
+		for (int i = position;i<position+((shipSize-1)*size);i=i+increment){
+			cells[i] = ship.getLetter();
+		}
+		
 	}
-	private boolean verifyBounds(Ship ship){
-		int shipSize = ship.getSize();
-		int position = ship.getPosition();
-		String orientation = ship.getOrientation();
+	private boolean verifyClash(int shipSize, int position, String orientation){
+
+		int increment = orientation.equalsIgnoreCase("h")? 1:this.size;
+		for (int i=position;i<position+((shipSize-1)*size);i = i+increment){
+			if (!cells[i].equals("#")){
+				return false;
+			}
+		}
+		return true;
+	}
+	private boolean verifyBounds(int shipSize, int position, String orientation){
 		
 		//Position out of bound
 		if (position<0||position>=shipSize*shipSize){

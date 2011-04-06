@@ -1,7 +1,6 @@
 package server;
 
 import java.net.*;
-import java.util.Scanner;
 import java.io.*;
 public class ClientListener extends Thread {
 Socket socket;
