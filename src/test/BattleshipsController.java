@@ -110,16 +110,16 @@ public class BattleshipsController {
 	}
 	
 	private String fakeSumbarinePositionCommand(){
-		return "command:position&Message:Please place your Submarine&options:a1,a2,a4&board:##########";
+		return "command:position&ship:submarine&Message:Please place your Submarine&options:a1,a2,a4&board:##########";
 	}
 	private String fakeCruiserPositionCommand(){
-		return "command:position&Message:Please place your Cruiser&options:a1,a2,a4&board:###00#s##";
+		return "command:position&ship:submarine&&Message:Please place your Cruiser&options:a1,a2,a4&board:###00#s##";
 	}
 	private String fakeDestroyerPositionCommand(){
-		return "command:position&Message:Please place your Destroyer&options:a1,a2,a4&board:#cc###s###";
+		return "command:position&ship:submarine&&Message:Please place your Destroyer&options:a1,a2,a4&board:#cc###s###";
 	}
 	private String fakeBattleshipPositionCommand(){
-		return "command:position&Message:Please place your Battleship&options:a1,a2,a4&board:d##cc###ss#";
+		return "command:position&ship:submarine&&Message:Please place your Battleship&options:a1,a2,a4&board:d##cc###ss#";
 	}
 	
 	private static HashMap<String,String> parseFakeJoinCommand(){

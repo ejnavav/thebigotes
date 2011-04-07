@@ -34,4 +34,5 @@ public class Ship {
 	public String getLetter(){
 		return this.type.substring(0,1);
 	}
+	
 }
