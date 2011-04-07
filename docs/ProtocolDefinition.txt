@@ -1,2 +1,150 @@
-Commands:
+Example commands:
+command:join&options:p,v
+command:fire&options:a3,b4,c2,d1,f1&
+
+PlayerClient
+  int join(options) //player number
+  board position()  //board with ships
+  void draw()       //board with ships
+  void message()    //board with ships
+  location fire()
+
+BattleshipsController
+
+
+FIRE COMMAND
+**************************************************
+Scenario: success join as player
+
+[Server sends]
+command: join
+message: Please join game
+options: p, v
+
+
+[Client replies]
+command: join-reply
+as: p
+
+
+[Server sends]
+command: join-status
+status: ok
+
+**************************************************
+[Server sends]
+command: fire
+options: a3, b4, c2, d1, f1
+
+
+[Client replies]
+command: fire
+loc: a3
+
+
+[Server sends]
+command: fire
+status: ok
+
+**************************************************
+Success fire sequence
+
+[Server sends]
+command: fire
+options: a3, b4, c2, d1, f1
+
+
+[Client replies]
+command: fire
+loc: a3
+
+
+[Server sends]
+command: fire
+status: ok
+
+**************************************************
+Fail fire sequence
+
+[Server sends]
+command: fire
+options: a3, b4, c2, d1, f1
+
+[Client replies]
+command: fire
+loc: a7
+
+[Server sends]
+command: fire
+status: error
+message: can't fire there
+
+[Server sends]
+command: fire
+options: a3, b4, c2, d1, f1
+
+**************************************************
+
+DRAW COMMAND
+
+**************************************************
+Success draw sequence
+
+[Server sends]
+command: draw
+board1: sbse####asbd###a
+board1: sbse####asbd###a
+message: u missed | u hit something | u sunk the submarine
+
+[Client replies]
+command: draw
+status: ok
+
+**************************************************
+Scenario: success join as player
+
+[Server sends]
+command: join
+message: Please join game
+options: p, v
+
+
+[Client replies]
+command: join-reply
+as: p
+
+
+[Server sends]
+command: join-status
+status: ok
+
+**************************************************
+
+
+
+
+server > player1 : join
+player1 > server : join
+
+server > player1 : position
+player1 > server : position
+
+server > player1 : wait
+
+server > player2 : join
+player2 > server : join
+
+server > player2 : position
+player2 > server2 : position
+
+(flip coin)
+
+server > player2 : position
+
+
+
+
+
+
+
 

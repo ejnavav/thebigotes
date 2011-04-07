@@ -1,10 +1,10 @@
 package client;
-import java.io.*;
 import java.util.*;
+import util.*;
 
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
+public class BattleShipsClient {
 
+<<<<<<< HEAD
 class BattleShipsClient {
 	public static void main(String[] args) {
 		String player1 = "_o____s__dd__b_____b_o___b__x__b_o__";
@@ -45,8 +45,95 @@ class BattleShipsClient {
 			String response = msgFromServer + "&Reply"; 
 			comunicator.sendMessage(response);
 			
+=======
+	private Communicator server = null;
+	
+	private Scanner user = new Scanner(System.in);
+
+	public BattleShipsClient(String host, int port){
+		server = new Communicator(host, port);
+	}
+
+	public void run(){
+		System.out.println("Welcome to Battleships");
+		System.out.println("Connecting to server...");
+		if (server.connect() == false){
+			System.err.println("Couldn't connect, please try again");
+			System.exit(0);
+		}
+		System.out.println("Connected");
+
+		//FIXME should stop at some point
+
+		while(true){
+			System.out.println("Waiting for command...");
+			String commandStr = server.waitForMessage();
+			System.out.println("Command received: "+commandStr);
+			handleCommand(commandStr);
 		}
 	}
+
+	public void handleCommand(String commandStr){
+		System.out.println("handling command");
+		Command command = new Command(commandStr);
+
+		// TODO command.is("join")
+		if (command.type().equals("join")) {
+			join(command);
+		}
+		// else if (commandType.equals("position")){ position(); }
+		// else { dontKnow(); }
+		System.out.println("done handling command");
+	}
+
+	public HashMap<String, String> parseCommand(String commandStr){
+		HashMap<String, String> command = new HashMap<String, String>();
+		String[] sections = commandStr.split("&");
+
+		for(String keyVal : sections){
+			String[] pair = keyVal.split(":");
+			command.put(pair[0], pair[1]);
+>>>>>>> cb76bd6478af3d75e63dc83c1318797eba6d241d
+		}
+		return command;
+	}
+
+	public void join(Command command){
+		String msg = command.get("message");
+		String[] options = command.get("options").split(",");
+		System.out.println(msg);
+		
+		boolean optionIsInvalid = true;
+		String option = null;
+		
+		while(optionIsInvalid){
+			option = user.nextLine();
+			for (String opt : options){
+				if (option.equals(opt)){
+					optionIsInvalid = false;
+					break;
+				}
+			}
+			if(optionIsInvalid){
+				System.out.println("Please select a valid option.");
+			}
+		}
+		Command reply = new Command();
+		reply.put("command", "join");
+		reply.put("as", option);
+		server.sendMessage(reply.toString());
+	}
+
+	public void position(){
+		// TODO implement
+		System.out.println("position()");
+	}
+
+	public void dontKnow(){
+		// TODO implement
+		System.out.println("dontKnow()");
+	}
+
 	public static void drawGrid(String player1,String player2){
 		player1 = player1.replace('_',' ');
 		player2 = player2.replace('_',' ');
@@ -75,7 +162,7 @@ class BattleShipsClient {
 				}
 				letter++;
 				printString+="|\n"+(i<player1.length()-1 ? letter:" ") + "  ";
-				
+
 			}
 		}
 
@@ -86,5 +173,13 @@ class BattleShipsClient {
 			}
 		}
 		System.out.println(printString);
+	}
+
+	public static void main(String[] args) {
+//		String host = "localhost";
+		String host = "10.1.1.6";
+		int port = 54321;
+		BattleShipsClient client = new BattleShipsClient(host, port);
+		client.run();
 	}
 }

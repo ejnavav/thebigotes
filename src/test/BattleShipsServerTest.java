@@ -12,19 +12,20 @@ public class BattleShipsServerTest {
 
 	@Before
 	public void init() {
-		System.out.println("before");
+		// System.out.println("before");
 		server = new BattleShipsServer(54321);
 		server.start();
 	}
 
 	@After
 	public void teardown() {
-		System.out.println("After");
+		// System.out.println("After");
 		server.stop();
 	}
 
 	@Test
 	public void accepts_one_client_connection() {
+		System.out.println("accepts_one_client_connection()");
 		FakeClient client1 = new FakeClient("localhost", 54321);
 		assertTrue(client1.connect());
 		client1.disconnect();
@@ -32,6 +33,7 @@ public class BattleShipsServerTest {
 
 	@Test
 	public void accepts_multiple_client_connection() {
+		System.out.println("accepts_multiple_client_connection");
 		client1 = new FakeClient("localhost", 54321);
 		client2 = new FakeClient("localhost", 54321);
 		assertTrue(client1.connect());
@@ -54,6 +56,7 @@ public class BattleShipsServerTest {
 
 	@Test
 	public void one_player_can_join() {
+		System.out.println("one_player_can_join()");
 		client1 = new FakeClient("localhost", 54321);
 		client1.connect();
 		try {
@@ -68,6 +71,7 @@ public class BattleShipsServerTest {
 
 	@Test
 	public void two_player_can_join() {
+		System.out.println("two_player_can_join()");
 		client1 = new FakeClient("localhost", 54321);
 		client2 = new FakeClient("localhost", 54321);
 		client1.connect();

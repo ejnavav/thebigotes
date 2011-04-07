@@ -69,23 +69,23 @@ public class FakeClient {
 		return msg;
 	}
 	
-	public boolean ping(){
-		System.out.println("Pinging");
-		out.println("ping");
-		// listen for 5 seconds
-		try{
-			for (int i = 0; i <  50; i++) {
-				System.out.print(".");
-				if(in.ready()){
-					System.out.println("\nReceived: "+in.readLine());
-					return true;
-				}
-				Thread.sleep(100);
-			}
-		} catch(Exception e){}
-		System.out.println("No reply");
-		return false;
-	}
+	// public boolean ping(){
+	// 		System.out.println("Pinging");
+	// 		out.println("ping");
+	// 		// listen for 5 seconds
+	// 		try{
+	// 			for (int i = 0; i <  50; i++) {
+	// 				System.out.print(".");
+	// 				if(in.ready()){
+	// 					System.out.println("\nReceived: "+in.readLine());
+	// 					return true;
+	// 				}
+	// 				Thread.sleep(100);
+	// 			}
+	// 		} catch(Exception e){}
+	// 		System.out.println("No reply");
+	// 		return false;
+	// 	}
 
 	public static void main(String[] args) {
 		FakeClient client = new FakeClient("localhost", 54321);
@@ -98,13 +98,5 @@ public class FakeClient {
 			} catch (Exception e) {}
 			client.getMessage();
 		}
-		
-		// System.out.println("connected? " + client.connect());
-		// 		try{
-		// 			System.out.println("Received " + client.in.nextLine());
-		// 		} catch (Exception e) {
-		// 		}
-		// 		// try {Thread.sleep(5000);}catch(Exception e ){};
-//		client.disconnect();
 	}
 }
