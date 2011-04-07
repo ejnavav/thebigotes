@@ -19,6 +19,10 @@ public class Command {
 	}
 
 	public String put(String key, String val){ return hm.put(key, val); }
+	
+    public String put(String key, ArrayList<String> val){
+    	return hm.put(key, join(val, ","));
+    }
 
 	public String get(String key){ return hm.get(key); }
 
