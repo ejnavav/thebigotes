@@ -151,12 +151,12 @@ public class Board {
 //private boolean verifyClash(int shipSize, int row, int col, String orientation) {
 	public ArrayList<String> getPositionOptions(Ship ship) {
 		ArrayList<String> positions= new ArrayList<String>();
-		int row = 1; 
-		int col = 1;
+		int row = 0; 
+		int col = 0;
 		for (int i =0; i<(size*size);i++){
 			if (i>0 && i%size==0){
-				row+= 1;
-				col=1;
+				row++;;
+				col=0;
 			}
 			if (verifyClash(ship.getSize(), row,col, "h") && verifyBounds(ship.getSize(),row,col, "h")){
 //				positions.add("h@"+(char)(96+row)+col);
