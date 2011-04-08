@@ -75,7 +75,6 @@ e |   |   |   |   |   |   |       e |   |   |   |   |   |   |
 f |   | c | c |   |   |   |       f |   |   |   |   |   |   |
 
 > Your turn, where u wanna fire? a3
-> bummm you hit something
 
 Your Board                        Your Enemy's Board
     1   2   3   4   5   6             1   2   3   4   5   6     
@@ -86,6 +85,7 @@ d |   |   |   | d |   |   |       d |   |   |   |   |   |   |
 e |   |   |   |   |   |   |       e |   |   |   |   |   |   |  
 f |   | c | c |   |   |   |       f |   |   |   |   |   |   |
 
+> bummm you hit something
 > Your turn, where u wanna fire? f2
 > you missed
 

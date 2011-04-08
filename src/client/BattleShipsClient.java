@@ -1,6 +1,7 @@
 package client;
 import java.util.*;
 import util.*;
+import server.*;
 
 public class BattleShipsClient {
 
@@ -44,6 +45,9 @@ public class BattleShipsClient {
         else if  (command.type().equals("draw")) {
             draw(command);
         }
+        else if  (command.type().equals("fire")) {
+            fire(command);
+        }
         else {
             System.out.println("Don't know about command" +command.toString());
         }
@@ -61,42 +65,31 @@ public class BattleShipsClient {
     }
     
     public void position(Command command){
-        draw(command);
+        drawGrid(command.get("board1"), command.get("board2"));
         System.out.println(command.get("message"));
-        String[] options = command.get("options").split(",");
-        
-        // TODO maybe move to command class
-        //convert command:position&message:position your submarine&options:v@b2,h@b2,h@b3
-        //to somehting like this:
-        //(json notation) { b2 : [h, v], b3: [h] }
-        HashMap <String, ArrayList<String>> positions = new HashMap <String, ArrayList<String>>();
-                
-        for(String item : options){
-            String orientation = item.split("@")[0];
-            String location = item.split("@")[1];
-            ArrayList<String> orientations = new ArrayList<String>();
-            
-            if(positions.containsKey(location)){
-                orientations = positions.get(location);
-            }
-            orientations.add(orientation);
-            positions.put(location, orientations);
-        }
-        
-        System.out.println("Enter location:");
-        // System.out.println("Valid Options: "+positions.keySet().toArray().toString());
-        
-        String[] locs = positions.keySet().toArray(new String[positions.size()]);
+        Board board = new Board(command.get("board1"));
 
-        String location = readValidOption(locs);
-        
-        System.out.println("Enter orientation: ");
-        // System.out.println("Valid Options: " + positions.get(location).toArray().toString());
-        String[] os = positions.get(location).toArray(new String[positions.size()]);
-        String orientation = readValidOption(os);
-        
+        boolean optionIsInvalid = true;
+
+        String location = null;
+        String orientation = null;
+
+        while(true) {
+            System.out.println("Enter location:");
+            location = user.nextLine();
+            System.out.println("Enter orientation h or v:");
+            orientation = user.nextLine();
+
+            try {
+                board.placeShip(command.get("ship"), location, orientation);
+                break;
+            } catch (Exception e) {
+                System.out.println("Invalid location or orientation.");
+            }
+        }
+
         Command reply = new Command();
-        reply.put("command", command.type());
+        reply.put("command", command.type() );
         reply.put("ship", command.get("ship"));
         reply.put("location", location);
         reply.put("orientation", orientation);
@@ -127,12 +120,35 @@ public class BattleShipsClient {
         String board1 = command.get("board1");
         String board2 = command.get("board2");
         drawGrid(board1, board2);
+        System.out.println(command.get("message"));
     }
-
-    public void dontKnow(Command command){
-        
-    }
-
+    
+   public void fire(Command command){
+       drawGrid(command.get("board1"), command.get("board2"));
+       System.out.println(command.get("message"));
+       Board board = new Board(command.get("board2"));
+       
+       String location = null;
+       
+       while(true) {
+           System.out.println("Enter location:");
+           location = user.nextLine();
+           try {
+               board.fire(location);
+               break;
+           } catch (Exception e) {
+               System.out.println("Invalid location, try again.");
+           }
+       }
+       
+       Command reply = new Command();
+       reply.put("command", command.type() );
+       reply.put("ship", command.get("ship"));
+       reply.put("location", location);
+       System.out.println("sending to server: "+ reply.toString());
+       server.sendMessage(reply.toString());
+   }
+    
     public static void drawGrid(String player1,String player2){
         player1 = player1.replace('#',' ');
         player2 = player2.replace('#',' ');

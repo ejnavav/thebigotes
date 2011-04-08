@@ -15,5 +15,4 @@ public class BattleShipsClientTest {
 	// public void it_should_position_ships(){
 	// }
 }
-
 	

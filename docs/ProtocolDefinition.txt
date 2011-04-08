@@ -1,13 +1,12 @@
 Example commands:
 
 command:join&options:p,v&message:Join as p) player v) Visitor. \nEnter option 
+command:join&options:p,v&message:Join as p) player v) Visitor. \nEnter option
 
-command:position&message:position your submarine&options:v@b2,h@b2,h@b3&board1:####################################&board2:####################################
-  
+command:position&message:position your submarine&board1:####################################&board2:####################################
   command:position
   message:position your submarine
   ship:submarine
-  options:v@b2,h@b2,h@b3
   board1:####################################
   board2:####################################
 
