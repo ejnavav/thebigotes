@@ -4,7 +4,6 @@ import util.*;
 import server.*;
 
 public class BattleShipsClient {
-
     private Communicator server = null;
     
     private Scanner user = new Scanner(System.in);
@@ -180,7 +179,7 @@ public class BattleShipsClient {
 
             }
         }
-
+        
         for (int i =0; i<50;i++){
             printString+=("-");
             if (i==24){

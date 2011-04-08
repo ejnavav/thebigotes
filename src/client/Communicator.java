@@ -11,7 +11,6 @@ public class Communicator {
 	PrintWriter out = null;
 	BufferedReader in = null;
 
-
 	public Communicator(String host, int port) {
 		this.host = host;
 		this.port = port;
@@ -42,31 +41,31 @@ public class Communicator {
 		}
 	}
 
-	public String getLastMessage(){
-		System.out.println("getLastMessage()");
-		String msg = getMessage();
-		String lastMsg = null;
-		while(msg != null){
-			lastMsg = new String(msg);
-			msg = getMessage();
-		}
-		System.out.println("getLastMessage() > "+lastMsg);
-		return lastMsg;
-	}
-
-	public String getMessage(){
-		System.out.println("getMessage()");
-		String msg = null;
-		try{
-			if(in.ready()){
-				msg = in.readLine();
-			}
-		} catch(Exception e){
-			System.err.println(e.getMessage());
-		}
-		System.out.println("getMessage() > "+msg);
-		return msg;
-	}
+    // public String getLastMessage(){
+    //  System.out.println("getLastMessage()");
+    //  String msg = getMessage();
+    //  String lastMsg = null;
+    //  while(msg != null){
+    //      lastMsg = new String(msg);
+    //      msg = getMessage();
+    //  }
+    //  System.out.println("getLastMessage() > "+lastMsg);
+    //  return lastMsg;
+    // }
+    // 
+    // public String getMessage(){
+    //  System.out.println("getMessage()");
+    //  String msg = null;
+    //  try{
+    //      if(in.ready()){
+    //          msg = in.readLine();
+    //      }
+    //  } catch(Exception e){
+    //      System.err.println(e.getMessage());
+    //  }
+    //  System.out.println("getMessage() > "+msg);
+    //  return msg;
+    // }
 
 	public String waitForMessage(){
 		String msg = null;
