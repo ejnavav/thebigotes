@@ -11,7 +11,7 @@ public class Client {
 	BufferedReader in;
 	private String type;
 
-	Board board;
+	public Board board;
 
 	public Client(Socket socket) {
 		try {
@@ -43,12 +43,13 @@ public class Client {
 //		}
 
 	}
-	public void addShip(String shipType,String orientation, int position ){
+	public void addShip(String shipType,String orientation, String position )throws Exception{
 		try{
 			board.placeShip(shipType,orientation,position);
 		}catch(Exception e){
 			//TODO Create Proper exception
 			e.printStackTrace();
+			throw e;
 		}
 		
 	}

@@ -7,8 +7,10 @@ public class Ship {
 	private int size;
 	private String type;
 	private String orientation;
-	private int position;
-	public Ship(String type, String orientation, int position) {
+	private String position;
+	ArrayList<String> cells = new ArrayList<String>();
+	
+	public Ship(String type, String orientation, String position) {
 		types.put("battleship", new Integer(4));
 		types.put("cruiser", new Integer(3));
 		types.put("destroyer", new Integer(2));
@@ -29,10 +31,13 @@ public class Ship {
 	
 	public String getType() { return type; }
 	
-	public int getPosition() {return position;}
+	public String getPosition() {return position;}
 	
 	public String getLetter(){
 		return this.type.substring(0,1);
+	}
+	public void addCell(String cell){
+		this.cells.add(cell);
 	}
 	
 }

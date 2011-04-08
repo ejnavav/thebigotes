@@ -3,6 +3,7 @@ package test;
 import java.util.*;
 
 import server.*;
+import util.*;
 public class BattleshipsController {
 	ArrayList<Client> clients = new ArrayList<Client>();
 	gameState state;
@@ -26,11 +27,29 @@ public class BattleshipsController {
 		System.out.println("a New Player has joined ");
 		System.out.println("Game State: " + this.state);
 		
-		if (clientType.equalsIgnoreCase("p")){
-			String positionCommand = fakeSumbarinePositionCommand();
-			sendCommand(client,positionCommand);
+		if (clientType.equalsIgnoreCase("p")){ //Is a Player
+			Command submarineCommand = generatePositionCommand(client, "submarine");
+			sendCommand(client,submarineCommand.toString());
 		}
 		
+	}
+	
+	private Command generateDrawCommand(){
+		Command drawCommand = new Command();
+		drawCommand.put("command", "draw");
+		
+		return drawCommand;
+	}
+	private Command generatePositionCommand(Client client, String shipType){
+		Ship submarine = new Ship("submarine","v","a1");
+		Command submarineCommand = new Command();
+		submarineCommand.put("command", "position");
+		submarineCommand.put("message", "Please place your "+shipType);
+		submarineCommand.put("ship", shipType);
+		submarineCommand.put("options", client.board.getPositionOptions(submarine));
+		submarineCommand.put("board1", client.board.getBoardString());
+		submarineCommand.put("board2", new Board().getBoardString());
+		return submarineCommand;
 	}
 	
 	private void sendCommand(Client client, String command){
@@ -54,23 +73,9 @@ public class BattleshipsController {
 	}
 	
 	public void processClientCommand(Client client, String message){
-		HashMap<String, String> command = null;
+//		HashMap<String, String> command = null;
+		Command command = new Command(message);
 		//TODO Delete these lines (Just tests)
-		if (message.equalsIgnoreCase("j")){
-			command = parseFakeJoinCommand();
-		}
-		if (message.equalsIgnoreCase("p1")){
-			command = parseSubFakePositionCommand();
-		}
-		if (message.equalsIgnoreCase("p2")){
-			command = parseCruFakePositionCommand();
-		}
-		if (message.equalsIgnoreCase("p3")){
-			command = parseDesFakePositionCommand();
-		}
-		if (message.equalsIgnoreCase("p4")){
-			command = parseBatFakePositionCommand();
-		}
 
 		//TODO Verify Game States to process commands
 		if (command.get("command").equals("join")){
@@ -83,21 +88,32 @@ public class BattleshipsController {
 		}
 	}
 	
-	private void placeShip(Client client,HashMap<String,String> command){
+	private void placeShip(Client client,Command command){
 		String shipType = command.get("ship");
-		int position = Integer.parseInt(command.get("position"));
+		String position = command.get("location");
 		String orientation = command.get("orientation");
 //		Ship ship = new Ship(shipType,orientation,position);
-		client.addShip(shipType,orientation,position);
-		
+		try{
+			client.addShip(shipType,orientation,position);
+		}catch(Exception e){
+			//TODO Send Placement Error Message
+			System.out.println(e);
+		}
+
 		if (shipType.equalsIgnoreCase("submarine")){
-			sendCommand(client,fakeCruiserPositionCommand());
+			Command cruiserCommand = generatePositionCommand(client, "cruiser");
+			sendCommand(client,cruiserCommand.toString());
+//			sendCommand(client,fakeCruiserPositionCommand());
 		}
 		if (shipType.equalsIgnoreCase("cruiser")){
-			sendCommand(client,fakeDestroyerPositionCommand());
+			Command destroyerCommand = generatePositionCommand(client, "destroyer");
+			sendCommand(client,destroyerCommand.toString());
+//			sendCommand(client,fakeDestroyerPositionCommand());
 		}
 		if (shipType.equalsIgnoreCase("destroyer")){
-			sendCommand(client,fakeBattleshipPositionCommand());
+			Command battleshipCommand = generatePositionCommand(client, "battleship");
+			sendCommand(client,battleshipCommand.toString());
+//			sendCommand(client,fakeBattleshipPositionCommand());
 		}
 		if (shipType.equalsIgnoreCase("battleship")){
 			sendCommand(client,"wait");
@@ -109,9 +125,6 @@ public class BattleshipsController {
 		return "command:join&message:please join the game&options:p,v";
 	}
 	
-	private String fakeSumbarinePositionCommand(){
-		return "command:position&ship:submarine&Message:Please place your Submarine&options:a1,a2,a4&board:##########";
-	}
 	private String fakeCruiserPositionCommand(){
 		return "command:position&ship:submarine&&Message:Please place your Cruiser&options:a1,a2,a4&board:###00#s##";
 	}
@@ -121,45 +134,6 @@ public class BattleshipsController {
 	private String fakeBattleshipPositionCommand(){
 		return "command:position&ship:submarine&&Message:Please place your Battleship&options:a1,a2,a4&board:d##cc###ss#";
 	}
-	
-	private static HashMap<String,String> parseFakeJoinCommand(){
-		HashMap<String, String> command = new HashMap<String, String>();
-		command.put("command", "join");
-		command.put("as", "p");
-		return command;
-	}
-	private static HashMap<String,String> parseSubFakePositionCommand(){
-		HashMap<String, String> command = new HashMap<String, String>();
-		command.put("command", "position");
-		command.put("ship", "submarine");
-		command.put("position", "1");
-		command.put("orientation", "v");
-		return command;
-	}
-	private static HashMap<String,String> parseCruFakePositionCommand(){
-		HashMap<String, String> command = new HashMap<String, String>();
-		command.put("command", "position");
-		command.put("ship", "cruiser");
-		command.put("position", "10");
-		command.put("orientation", "h");
-		return command;
-	}
-	private static HashMap<String,String> parseDesFakePositionCommand(){
-		HashMap<String, String> command = new HashMap<String, String>();
-		command.put("command", "position");
-		command.put("ship", "destroyer");
-		command.put("position", "12");
-		command.put("orientation", "h");
-		return command;
-	}
-	private static HashMap<String,String> parseBatFakePositionCommand(){
-		HashMap<String, String> command = new HashMap<String, String>();
-		command.put("command", "position");
-		command.put("ship", "battleship");
-		command.put("position", "14");
-		command.put("orientation", "v");
-		return command;
-	}
-	
+
 	
 }

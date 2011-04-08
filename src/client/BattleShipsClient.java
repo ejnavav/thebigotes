@@ -4,48 +4,6 @@ import util.*;
 
 public class BattleShipsClient {
 
-<<<<<<< HEAD
-class BattleShipsClient {
-	public static void main(String[] args) {
-		String player1 = "_o____s__dd__b_____b_o___b__x__b_o__";
-		String player2 = "____so_xo____x_o_______x__bbbbo_____";
-		drawGrid(player1,player2);
-
-//		System.out.println("-h\tDisplay help");
-//
-//		// System.exit(1);
-//		// Scanner stdin = new Scanner(System.in);
-//		// Scanner stdin = new Scanner(System.in);
-//
-//		// System.out.println(stdin.next());
-//
-//		// 
-//		// // System.out.println("rrrrrrrruuuuuuuuunnnnnnniiiiiiinnnnnnnnn");
-//		// // System.out.flush();
-//		// // System.exit(0);
-//		// 
-//		// for (int i = 0; i < 5;i++ ){
-//		// 		try {
-//		// 			String str = stdin.next();
-//		// 			System.out.println(str);
-//		// 		} catch (Exception e) {
-//		// 			System.out.println(e.getMessage());
-//		// 			System.exit(1);
-//		// 		}
-//		// 	}
-		Communicator comunicator = new Communicator();
-		comunicator.startClient();
-		//Scanner scanner = new Scanner(System.in);
-		while (true){
-//			System.out.println("Enter a Command: ");
-//			String msg = scanner.nextLine();
-//			comunicator.sendMessage(msg);
-			String msgFromServer = comunicator.receiveMesssage();
-			System.out.println("Command Received from Server: "+msgFromServer);
-			String response = msgFromServer + "&Reply"; 
-			comunicator.sendMessage(response);
-			
-=======
 	private Communicator server = null;
 	
 	private Scanner user = new Scanner(System.in);
@@ -93,7 +51,7 @@ class BattleShipsClient {
 		for(String keyVal : sections){
 			String[] pair = keyVal.split(":");
 			command.put(pair[0], pair[1]);
->>>>>>> cb76bd6478af3d75e63dc83c1318797eba6d241d
+
 		}
 		return command;
 	}
