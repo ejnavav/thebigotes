@@ -1,6 +1,18 @@
 Example commands:
-command:join&options:p,v
-command:fire&options:a3,b4,c2,d1,f1&
+
+command:join&options:p,v&message:Join as p) player v) Visitor. \nEnter option 
+
+command:position&message:position your submarine&options:v@b2,h@b2,h@b3&board1:####################################&board2:####################################
+  
+  command:position
+  message:position your submarine
+  ship:submarine
+  options:v@b2,h@b2,h@b3
+  board1:####################################
+  board2:####################################
+
+command:fire&options:a3,b4,c2,d1,f1&  board1:####################################&board2:####################################
+
 
 PlayerClient
   int join(options) //player number

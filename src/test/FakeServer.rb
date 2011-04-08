@@ -15,10 +15,19 @@ puts "Server started"
     player = "p#{clients.size}"
     loop do
       puts "Enter command:"
-      command = gets
+      input = gets      
+      if input =~ /join/ 
+        command = join
+      else
+        command = input
+      end
       client.puts command
       reply = client.gets
       puts player + " replied: " + reply
     end
   end
+end
+
+def join
+  "command:join&options:p,v&message:Join as p) player v) Visitor. \nEnter option"
 end
