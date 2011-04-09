@@ -1,5 +1,6 @@
 package client;
 
+
 import java.io.*;
 import java.net.*;
 //import java.util.*;
@@ -10,7 +11,8 @@ public class Communicator {
 	Socket socket = null;
 	PrintWriter out = null;
 	BufferedReader in = null;
-
+	private ClientProtocol protocol = new ClientProtocol();
+ 
 
 	public Communicator(String host, int port) {
 		this.host = host;
@@ -54,6 +56,11 @@ public class Communicator {
 		return lastMsg;
 	}
 
+	/**
+	 * Get message from server
+	 * @return
+	 */
+	
 	public String getMessage(){
 		System.out.println("getMessage()");
 		String msg = null;
@@ -68,6 +75,21 @@ public class Communicator {
 		return msg;
 	}
 
+/**
+ * sent message to server
+ * @param message
+ */
+
+	public void sendMessage(String message){
+		try {
+			
+			out.println(message);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	
 	public String waitForMessage(){
 		String msg = null;
 		try{
@@ -77,15 +99,8 @@ public class Communicator {
 		}
 		return msg;
 	}
-
-	public void sendMessage(String message){
-		try {
-			out.println(message);
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-		}
-	}
-
+	
+	
 	public static void main(String[] args) {
 		Communicator client = new Communicator("localhost", 54321);
 		client.connect();
