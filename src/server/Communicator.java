@@ -33,8 +33,18 @@ public class Communicator extends Thread {
 
 		try {
 			
-			//TODO: this is all the assimgnet 
-			//the first  2 clients are player 1+2 and all the others are the public 
+//			 *************READ  ME *************
+//			 the first  2 clients are player 1+2 and all the others are the public 		 
+//			 Hasmap  SAVE ip and player object 
+//			 player[0] = player1 
+//			 player[1] = player2
+//			 
+//			 public exteds client??? we must stream to everyone the results of players
+//			 we must keep track of all the user momements and stream to the public
+//			 when a new plaeyr connectr to the server and ask to be a player we must have player1 and plaeyr2
+//			 the server must return the "you are the player one or 2 or sorry you can join the game so press v or p (poublic or visito)"  "
+//			 server must log everything ...all inputs and out puts
+//			what is really the protocol? because i dont understand....is it validation only?
 			
 			System.out.println("Waiting for client ...");
 			clientSocket = serverSocket.accept();
@@ -57,7 +67,7 @@ public class Communicator extends Thread {
 		
 		// sendjoin();
 		// loop();
-		disconnect();
+		//disconnect();
 	}
 
 	public void loop() {
