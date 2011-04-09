@@ -15,8 +15,7 @@ public class Communicator extends Thread {
 	private ServerProtocol protocol = new ServerProtocol();
 
 	
-	//TODO:I think we must have a hasmap with all the clients to strem the player results
-	//private Player p1 = new Player();
+ 	//private Player p1 = new Player();
 	//private Player p2 = new Player();
 	
 	public Communicator(int port) {
