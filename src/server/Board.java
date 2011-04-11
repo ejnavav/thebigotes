@@ -57,8 +57,8 @@ public class Board {
 		// To Convert the row Letter to a integer Position in the array
 		char c = pos.charAt(0);
 		int charInt = c;
-		int col = Integer.parseInt(pos.substring(1, 1).toLowerCase());
-		int row = (charInt - 97) * size;
+		int col = Integer.parseInt(pos.substring(1, 2).toLowerCase())-1;
+		int row = (charInt - 97);
 
 		Ship ship = new Ship(shipType, orientation, pos);
 		int shipSize = ship.getSize();
@@ -104,11 +104,18 @@ public class Board {
 		// return true;
 		
 		for (int i=0; i<shipSize;i++){
+			if(verifyBounds(shipSize,row,col,orientation)){
+				if (cells[row][col].getShip() != null)
+					return false;
+			}
 			
+			if (orientation.equals("h")) col++;
+			else row++;
 		}
-		if (cells[row][col].getShip() == null)
-			return true;
-		return false;
+		return true;
+//		if (cells[row][col].getShip() == null)
+//			return true;
+//		return false;
 	}
 
 	private boolean verifyBounds(int shipSize, int row, int col,
@@ -143,7 +150,7 @@ public class Board {
 		} catch (Exception e) {
 			return false;
 		}
-		return false;
+		return true;
 	}
 
 	public void fire(int position) throws Exception {
@@ -169,7 +176,6 @@ public class Board {
 		for (int i = 0; i < (size * size); i++) {
 			if (i > 0 && i % size == 0) {
 				row++;
-				;
 				col = 0;
 			}
 			if (verifyClash(ship.getSize(), row, col, "h")) {

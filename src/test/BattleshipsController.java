@@ -41,12 +41,12 @@ public class BattleshipsController {
 		return drawCommand;
 	}
 	private Command generatePositionCommand(Client client, String shipType){
-		Ship submarine = new Ship("submarine","v","a1");
+		Ship ship = new Ship(shipType,"v","a1");
 		Command submarineCommand = new Command();
 		submarineCommand.put("command", "position");
 		submarineCommand.put("message", "Please place your "+shipType);
 		submarineCommand.put("ship", shipType);
-		submarineCommand.put("options", client.board.getPositionOptions(submarine));
+		submarineCommand.put("options", client.board.getPositionOptions(ship));
 		submarineCommand.put("board1", client.board.getBoardString());
 		submarineCommand.put("board2", new Board().getBoardString());
 		return submarineCommand;
@@ -66,8 +66,10 @@ public class BattleshipsController {
 	public void newClientArrived(Client client) {
 		switch (state) {
 		case WAITING:
-//			joinPlayer(client);
-			sendCommand(client,generateFakePlayerJoinCommand());
+//			joinPlayer(client);""
+//			sendCommand(client,generateFakePlayerJoinCommand());
+			Command joinCommand = new Command("command:join&message:please join the game&options:p,v");
+			sendCommand(client,joinCommand.toString());
 			break;
 		}
 	}
@@ -86,8 +88,17 @@ public class BattleshipsController {
 		if (command.get("command").equals("position")){
 			placeShip(client, command);
 		}
+		
+		if (command.get("command").equals("fire")){
+			fire(client, command);
+		}
+		
 	}
 	
+	 private void fire(Client client,Command command){
+		 
+	 }
+	 
 	private void placeShip(Client client,Command command){
 		String shipType = command.get("ship");
 		String position = command.get("location");
@@ -100,16 +111,18 @@ public class BattleshipsController {
 			System.out.println(e);
 		}
 
-		if (shipType.equalsIgnoreCase("submarine")){
-			Command cruiserCommand = generatePositionCommand(client, "cruiser");
-			sendCommand(client,cruiserCommand.toString());
-//			sendCommand(client,fakeCruiserPositionCommand());
-		}
 		if (shipType.equalsIgnoreCase("cruiser")){
 			Command destroyerCommand = generatePositionCommand(client, "destroyer");
 			sendCommand(client,destroyerCommand.toString());
 //			sendCommand(client,fakeDestroyerPositionCommand());
 		}
+		
+		if (shipType.equalsIgnoreCase("submarine")){
+			Command cruiserCommand = generatePositionCommand(client, "cruiser");
+			sendCommand(client,cruiserCommand.toString());
+//			sendCommand(client,fakeCruiserPositionCommand());
+		}
+		
 		if (shipType.equalsIgnoreCase("destroyer")){
 			Command battleshipCommand = generatePositionCommand(client, "battleship");
 			sendCommand(client,battleshipCommand.toString());
