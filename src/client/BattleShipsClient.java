@@ -1,14 +1,14 @@
 package client;
 import java.util.*;
-import util.*;
 
+ import util.*;
+
+ 
 public class BattleShipsClient {
 
 	private Communicator server = null;
-	
-	private Scanner user = new Scanner(System.in);
-
-	public BattleShipsClient(String host, int port){
+  	private Scanner user = new Scanner(System.in);
+ 	public BattleShipsClient(String host, int port){
 		server = new Communicator(host, port);
 	}
 
@@ -24,15 +24,15 @@ public class BattleShipsClient {
 		//FIXME should stop at some point
 
 		while(true){
-			System.out.println("Waiting for command...");
+			System.out.println("Waiting for command...\n");
 			String commandStr = server.waitForMessage();
-			System.out.println("Command received: "+commandStr);
+			System.out.println("Command received: "+commandStr+ "\n");
 			handleCommand(commandStr);
 		}
 	}
 
 	public void handleCommand(String commandStr){
-		System.out.println("handling command");
+		System.out.println("Handling command");
 		Command command = new Command(commandStr);
 
 		// TODO command.is("join")
@@ -73,7 +73,7 @@ public class BattleShipsClient {
 				}
 			}
 			if(optionIsInvalid){
-				System.out.println("Please select a valid option.");
+				System.out.println("Please select a valid option");
 			}
 		}
 		Command reply = new Command();
@@ -134,8 +134,8 @@ public class BattleShipsClient {
 	}
 
 	public static void main(String[] args) {
-//		String host = "localhost";
-		String host = "10.1.1.6";
+ 		String host = "localhost";
+		//String host = "10.1.1.6";
 		int port = 54321;
 		BattleShipsClient client = new BattleShipsClient(host, port);
 		client.run();

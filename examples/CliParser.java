@@ -1,5 +1,4 @@
-package client;
-// http://commons.apache.org/cli/usage.html
+ // http://commons.apache.org/cli/usage.html
 // http://commons.apache.org/cli/api-release/index.html
 import org.apache.commons.cli.*;
 

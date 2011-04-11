@@ -12,6 +12,7 @@ public class ConnectionListener extends Thread {
 
 		try {
 			serverSocket = new ServerSocket(port);
+			System.out.println("Server started\n");
 			System.out.println("Listening on port " + port);
 		} catch (IOException e) {
 			System.err.println("Could not start listening on port: " + port);
