@@ -2,6 +2,7 @@ package client;
 import java.util.*;
 import util.*;
 import server.*;
+import java.io.*;
 
 public class BattleShipsClient {
     private Communicator server = null;
@@ -11,7 +12,7 @@ public class BattleShipsClient {
     public BattleShipsClient(String host, int port){
         server = new Communicator(host, port);
     }
-
+    
     public void run(){
         System.out.println("Welcome to Battleships");
         System.out.println("Connecting to server...");
@@ -20,20 +21,44 @@ public class BattleShipsClient {
             System.exit(0);
         }
         System.out.println("Connected");
-
-        //FIXME should stop at some point   
+        
         while(true){
             System.out.println("Waiting for command...");
-            String commandStr = server.waitForMessage();
-            System.out.println("Command received: "+commandStr);
-            handleCommand(commandStr);
+            Command command = waitForCommand();
+            if (command == null){
+                break;
+            }
+            System.out.println("Command received: "+command.toString());
+            handleCommand(command);
         }
     }
+    
+    // public InputStream setTestImputStream(){
+    //     
+    // }
+    
+    public boolean connect(){
+        return server.connect();
+    }
+    
+	public void sendMessage(String message){
+	    server.sendMessage(message);
+	}
+    
+    public Command waitForCommand(){
+        String commandStr = server.waitForMessage();
+        Command command = null;
+        try {
+            command = new Command(commandStr);
+        } catch (Exception e) {
+            System.err.println("Invalid command: >"+commandStr);
+        }
+        return command;
+    }
 
-    public void handleCommand(String commandStr){
+    public void handleCommand(Command command){
         System.out.println("handling command");
-        Command command = new Command(commandStr);
-
+        
         // TODO command.is("join")
         if (command.type().equals("join")) {
             join(command);
@@ -44,9 +69,9 @@ public class BattleShipsClient {
         else if  (command.type().equals("draw")) {
             draw(command);
         }
-        else if  (command.type().equals("fire")) {
-            fire(command);
-        }
+//        else if  (command.type().equals("fire")) {
+//            fire(command);
+//        }
         else {
             System.out.println("Don't know about command" +command.toString());
         }
@@ -66,26 +91,27 @@ public class BattleShipsClient {
     public void position(Command command){
         drawGrid(command.get("board1"), command.get("board2"));
         System.out.println(command.get("message"));
-        Board board = new Board(command.get("board1"));
+        // Board board = new Board(command.get("board1"));
 
         boolean optionIsInvalid = true;
 
         String location = null;
         String orientation = null;
 
-        while(true) {
+        //TODO validations
+        // while(true) {
             System.out.println("Enter location:");
             location = user.nextLine();
             System.out.println("Enter orientation h or v:");
             orientation = user.nextLine();
 
-            try {
-                board.placeShip(command.get("ship"), location, orientation);
-                break;
-            } catch (Exception e) {
-                System.out.println("Invalid location or orientation.");
-            }
-        }
+            // try {
+            //                 board.placeShip(command.get("ship"), location, orientation);
+            //                 break;
+            //             } catch (Exception e) {
+            //                 System.out.println("Invalid location or orientation.");
+            //             }
+        // }
 
         Command reply = new Command();
         reply.put("command", command.type() );
@@ -122,31 +148,31 @@ public class BattleShipsClient {
         System.out.println(command.get("message"));
     }
     
-   public void fire(Command command){
-       drawGrid(command.get("board1"), command.get("board2"));
-       System.out.println(command.get("message"));
-       Board board = new Board(command.get("board2"));
-       
-       String location = null;
-       
-       while(true) {
-           System.out.println("Enter location:");
-           location = user.nextLine();
-           try {
-               board.fire(location);
-               break;
-           } catch (Exception e) {
-               System.out.println("Invalid location, try again.");
-           }
-       }
-       
-       Command reply = new Command();
-       reply.put("command", command.type() );
-       reply.put("ship", command.get("ship"));
-       reply.put("location", location);
-       System.out.println("sending to server: "+ reply.toString());
-       server.sendMessage(reply.toString());
-   }
+    public void fire(Command command){
+        drawGrid(command.get("board1"), command.get("board2"));
+        System.out.println(command.get("message"));
+        // Board board = new Board(command.get("board2"));
+
+        String location = null;
+
+        // while(true) {
+        System.out.println("Enter location:");
+        location = user.nextLine();
+        // try {
+        //            board.fire(location);
+        //            break;
+        //        } catch (Exception e) {
+        //            System.out.println("Invalid location, try again.");
+        //        }
+        //    }
+
+        Command reply = new Command();
+        reply.put("command", command.type() );
+        reply.put("ship", command.get("ship"));
+        reply.put("location", location);
+        System.out.println("sending to server: "+ reply.toString());
+        server.sendMessage(reply.toString());
+    }
     
     public static void drawGrid(String player1,String player2){
         player1 = player1.replace('#',' ');

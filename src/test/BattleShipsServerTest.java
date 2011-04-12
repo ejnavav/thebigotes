@@ -3,90 +3,82 @@ package test;
 import org.junit.*;
 import static org.junit.Assert.*;
 import server.*;
+import client.*;
+import util.*;
 
 public class BattleShipsServerTest {
 
-	BattleShipsServer server = null;
-	FakeClient client1;
-	FakeClient client2;
+    BattleShipsServer server = null;
+    // String host = "localhost";
+    String host = "10.1.1.6";
+    int port = 54321;
 
-	@Before
-	public void init() {
-		// System.out.println("before");
-		server = new BattleShipsServer(54321);
-		server.start();
-	}
+    @Test
+    public void accepts_multiple_client_connection() {
+        System.out.println("accepts_multiple_client_connection");            
+        BattleShipsClient client1 = new BattleShipsClient(host, port);
+        BattleShipsClient client2 = new BattleShipsClient(host, port);
+        assertTrue(client1.connect());
+        assertTrue(client2.connect());
+    } 
 
-	@After
-	public void teardown() {
-		// System.out.println("After");
-		server.stop();
-	}
+    @Test
+    public void two_player_can_join() {
+        System.out.println("two_player_can_join()");
+        BattleShipsClient client1 = new BattleShipsClient(host, port);
+        BattleShipsClient client2 = new BattleShipsClient(host, port);
+        try{
+            client1.connect();
+            client2.connect();
 
-	@Test
-	public void accepts_one_client_connection() {
-		System.out.println("accepts_one_client_connection()");
-		FakeClient client1 = new FakeClient("localhost", 54321);
-		assertTrue(client1.connect());
-		client1.disconnect();
-	}
+            Command command = client1.waitForCommand();
+            assertTrue(command.type().equals("join"));
+            client1.sendMessage("command:join&as:p");
+            command = client1.waitForCommand();
+            assertTrue(command.type().equals("position"));
+            
+            command = client2.waitForCommand();
+            assertTrue(command.type().equals("join"));
+            client2.sendMessage("command:join&as:p");
+            command = client2.waitForCommand();
+            assertTrue(command.type().equals("position"));
 
-	@Test
-	public void accepts_multiple_client_connection() {
-		System.out.println("accepts_multiple_client_connection");
-		client1 = new FakeClient("localhost", 54321);
-		client2 = new FakeClient("localhost", 54321);
-		assertTrue(client1.connect());
-		assertTrue(client2.connect());
-		client1.disconnect();
-		client2.disconnect();
-	}
+        } catch (Exception e) {
+            fail("should not throw any exception but threw: "+e.getMessage());
+        }
+    }
 
-	// @Test(timeout=1000)
-	// public void replies_to_ping(){
-	// client1 = new FakeClient("localhost", 54321);
-	// client2 = new FakeClient("localhost", 54321);
-	// client1.connect();
-	// client2.connect();
-	// assertTrue(client1.ping());
-	// assertTrue(client2.ping());
-	// client1.disconnect();
-	// client2.connect();
-	// }
+    @Test
+    public void should_position_ships() {
+        System.out.println("should_position_ships");
+        BattleShipsClient client =  new BattleShipsClient(host, port);
+        assertTrue(client.connect());
 
-	@Test
-	public void one_player_can_join() {
-		System.out.println("one_player_can_join()");
-		client1 = new FakeClient("localhost", 54321);
-		client1.connect();
-		try {
-			Thread.sleep(200);
-		} catch (Exception e) {
-		}
-		String command = client1.getLastMessage();
-		assertNotNull("Expecting to receive a command", command);
-		assertTrue("Expecting: 'command:join' but received: " + command,
-				command.matches("command:join"));
-	}
+        Command command = client.waitForCommand();
+        assertTrue(command.type().equals("join"));
+        client.sendMessage("command:join&as:p");
 
-	@Test
-	public void two_player_can_join() {
-		System.out.println("two_player_can_join()");
-		client1 = new FakeClient("localhost", 54321);
-		client2 = new FakeClient("localhost", 54321);
-		client1.connect();
-		client2.connect();
-		try {
-			Thread.sleep(200);
-		} catch (Exception e) {
-		}
-		String command = client1.getLastMessage();
-		assertNotNull("Expecting to receive a command", command);
-		assertTrue("Expecting: 'command:join' but received: " + command,
-				command.matches("command:join"));
-		command = client2.getLastMessage();
-		assertNotNull("Expecting to receive a command", command);
-		assertTrue("Expecting: 'command:join' but received: " + command,
-				command.matches("command:join"));
-	}
+        command = client.waitForCommand();
+        assertTrue(command.type().equals("position"));
+        client.sendMessage("command:position&ship:"+command.get("ship")+"&location:a1&orientation:v");
+
+        command = client.waitForCommand();
+        assertTrue(command.type().equals("position"));
+        client.sendMessage("command:position&ship:"+command.get("ship")+"&location:a2&orientation:v");
+
+        command = client.waitForCommand();
+        assertTrue(command.type().equals("position"));
+        client.sendMessage("command:position&ship:"+command.get("ship")+"&location:a3&orientation:v");
+
+        command = client.waitForCommand();
+        assertTrue(command.type().equals("position"));
+        client.sendMessage("command:position&ship:"+command.get("ship")+"&location:a4&orientation:v");
+
+        command = client.waitForCommand();
+        assertTrue("expecting commant type to be draw but received: " +command.type(), command.type().equals("draw"));
+
+        String board1 = "sdcb###dcb####cb#####b##############";
+        assertTrue("excpeting board1 to be: "+board1+" but received: "+command.get("board1"),
+            command.get("board1").matches(board1));
+    }
 }
