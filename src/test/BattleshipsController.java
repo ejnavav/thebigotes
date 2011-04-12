@@ -157,19 +157,6 @@ public class BattleshipsController {
 		return (Math.random()>0.5)? player1:player2;
 		
 	}
-	private String generateFakePlayerJoinCommand(){
-		return "command:join&message:please join the game&options:p,v";
-	}
-	
-	private String fakeCruiserPositionCommand(){
-		return "command:position&ship:submarine&&Message:Please place your Cruiser&options:a1,a2,a4&board:###00#s##";
-	}
-	private String fakeDestroyerPositionCommand(){
-		return "command:position&ship:submarine&&Message:Please place your Destroyer&options:a1,a2,a4&board:#cc###s###";
-	}
-	private String fakeBattleshipPositionCommand(){
-		return "command:position&ship:submarine&&Message:Please place your Battleship&options:a1,a2,a4&board:d##cc###ss#";
-	}
 
 	
 }
