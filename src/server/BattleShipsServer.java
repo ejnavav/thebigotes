@@ -16,7 +16,6 @@ public class BattleShipsServer {
 
 	}
 
-
 	public static void main(String[] args) {
 		BattleShipsServer server = new BattleShipsServer(54321);
 	    server.start();
@@ -27,5 +26,4 @@ public class BattleShipsServer {
 	public static void newClientConnected(Client client) {
 		gameController.newClientArrived(client);
 	}	
-	
 }

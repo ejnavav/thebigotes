@@ -58,8 +58,7 @@ public class BattleShipsClient {
 
     public void handleCommand(Command command){
         System.out.println("handling command");
-        
-        // TODO command.is("join")
+
         if (command.type().equals("join")) {
             join(command);
         }
@@ -69,9 +68,12 @@ public class BattleShipsClient {
         else if  (command.type().equals("draw")) {
             draw(command);
         }
-//        else if  (command.type().equals("fire")) {
-//            fire(command);
-//        }
+        else if  (command.type().equals("wait")) {
+            wait(command);
+        }
+        else if  (command.type().equals("fire")) {
+            fire(command);
+        }
         else {
             System.out.println("Don't know about command" +command.toString());
         }
@@ -145,7 +147,9 @@ public class BattleShipsClient {
         String board1 = command.get("board1");
         String board2 = command.get("board2");
         drawGrid(board1, board2);
-        System.out.println(command.get("message"));
+        if(command.get("message") != null){
+            System.out.println(command.get("message"));
+        }
     }
     
     public void fire(Command command){
@@ -168,11 +172,15 @@ public class BattleShipsClient {
 
         Command reply = new Command();
         reply.put("command", command.type() );
-        reply.put("ship", command.get("ship"));
         reply.put("location", location);
         System.out.println("sending to server: "+ reply.toString());
         server.sendMessage(reply.toString());
     }
+    
+    public void wait(Command command){
+        System.out.println(command.get("message"));
+    }
+    
     
     public static void drawGrid(String player1,String player2){
         player1 = player1.replace('#',' ');
@@ -216,8 +224,8 @@ public class BattleShipsClient {
     }
 
     public static void main(String[] args) {
-        // String host = "localhost";
-        String host = "10.1.1.6";
+         String host = "localhost";
+        // String host = "10.1.1.3";
         int port = 54321;
         BattleShipsClient client = new BattleShipsClient(host, port);
         client.run();

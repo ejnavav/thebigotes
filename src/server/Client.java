@@ -13,6 +13,7 @@ public class Client {
 
 	public Board board;
 	public boolean isReady= false;
+	public boolean hasTurn = false;
 
 	public Client(Socket socket) {
 		try {
