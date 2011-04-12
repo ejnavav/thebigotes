@@ -7,11 +7,12 @@ public class Board {
 		String cellString;
 		Ship ship;
 		boolean isFired;
+		
 
 		public Cell(int row, int col) {
 			int charInt = 97 + row;
 			char rowChar = (char) charInt;
-			this.cellString = String.valueOf(rowChar) + (col+1);
+			this.cellString = String.valueOf(rowChar) + (col + 1);
 		}
 
 		public Ship getShip() {
@@ -24,9 +25,14 @@ public class Board {
 		}
 
 		public String toString() {
-			if (ship == null)
+			if (ship == null){
+				if (!isFired)
 				return SPACE_CHAR;
+				else return MISSED_CHAR;
+			}else if(!isFired)
 			return ship.getLetter();
+			else if (!ship.isSunk())return HIT_CHAR;
+			else return ship.getLetter().toUpperCase();
 		}
 
 		public String getCellString() {
@@ -40,8 +46,10 @@ public class Board {
 
 	private int size = 6;
 	Cell[][] cells = new Cell[size][size];
-	ArrayList<Ship> ships = new ArrayList<Ship>();
+	
 	protected final String SPACE_CHAR = "#";
+	protected final String MISSED_CHAR = "o";
+	protected final String HIT_CHAR = "*";
 
 	public Board() {
 		for (int i = 0; i < cells.length; i++) {
@@ -57,7 +65,7 @@ public class Board {
 		// To Convert the row Letter to a integer Position in the array
 		char c = pos.charAt(0);
 		int charInt = c;
-		int col = Integer.parseInt(pos.substring(1, 2).toLowerCase())-1;
+		int col = Integer.parseInt(pos.substring(1, 2).toLowerCase()) - 1;
 		int row = (charInt - 97);
 
 		Ship ship = new Ship(shipType, orientation, pos);
@@ -68,7 +76,7 @@ public class Board {
 		// throw new Exception("Ship Can't be placed there");
 		// }
 
-		ships.add(ship);
+		
 		// for (int i = position)
 		// int increment = orientation.equalsIgnoreCase("h") ? 1 : this.size;
 		// for (int i = position; i < position + ((shipSize - 1) * size); i = i
@@ -77,9 +85,10 @@ public class Board {
 		// }
 
 		try {
+			// for (int i = 0; i < ship.getSize(); i++) {
+			if (!verifyClash(shipSize, row, col, orientation))
+				throw new Exception("Verifying Clash");
 			for (int i = 0; i < ship.getSize(); i++) {
-				if (!verifyClash(shipSize, row, col, orientation))
-					throw new Exception();
 				cells[row][col].setShip(ship);
 				if (orientation.equalsIgnoreCase("h")) {
 					col++;
@@ -88,6 +97,7 @@ public class Board {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
 		}
 
 	}
@@ -102,20 +112,28 @@ public class Board {
 		// }
 		// }
 		// return true;
-		
-		for (int i=0; i<shipSize;i++){
-			if(verifyBounds(shipSize,row,col,orientation)){
-				if (cells[row][col].getShip() != null)
-					return false;
+		try {
+			if (!verifyBounds(shipSize, row, col, orientation)) return false;
+			for (int i = 0; i < shipSize; i++) {
+				
+//				if (verifyBounds(shipSize, row, col, orientation)) {
+					if (cells[row][col].getShip() != null)
+						return false;
+//				}else return false;
+
+				if (orientation.equals("h"))
+					col++;
+				else
+					row++;
 			}
-			
-			if (orientation.equals("h")) col++;
-			else row++;
+			return true;
+		} catch (Exception e) {
+			return false;
 		}
-		return true;
-//		if (cells[row][col].getShip() == null)
-//			return true;
-//		return false;
+
+		// if (cells[row][col].getShip() == null)
+		// return true;
+		// return false;
 	}
 
 	private boolean verifyBounds(int shipSize, int row, int col,

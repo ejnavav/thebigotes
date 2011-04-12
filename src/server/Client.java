@@ -12,6 +12,7 @@ public class Client {
 	private String type;
 
 	public Board board;
+	public boolean isReady= false;
 
 	public Client(Socket socket) {
 		try {
@@ -27,6 +28,7 @@ public class Client {
 		
 		this.board = new Board();
 	}
+	
 
 	public void sendCommand(String command) throws Exception {
 		out.println(command);
