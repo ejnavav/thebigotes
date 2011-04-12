@@ -152,8 +152,9 @@ public class BattleshipsController {
 
 	}
 	
-	private Client rollDice(){
+	private Client flipCoin(){
 		Double randomNumber = Math.random();
+		return (randomNumber>0.5)? player1:player2;
 		
 	}
 	private String generateFakePlayerJoinCommand(){
