@@ -14,6 +14,8 @@ public class Client {
 	public boolean isReady= false;
 	public boolean hasTurn = false;
 	ClientListener clientListener;
+	String name;
+	
 	public Client(Socket socket) {
 		try {
 			out = new PrintWriter(socket.getOutputStream(), true);
@@ -27,7 +29,10 @@ public class Client {
 		this.board = new Board();
 	}
 	
-
+	public String getName(){return name;}
+	
+	public void setName(String name){this.name=name;}
+	
 	public void sendCommand(String command) throws Exception {
 		out.println(command);
 	}

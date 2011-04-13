@@ -16,7 +16,9 @@ private Client client;
 		while (true){
 			String input = in.readLine();
 			System.out.println("Received from Client: "+ input);
+			if (input==null)return;
 			if (input.length()>0) BattleShipsServer.gameController.processClientCommand(client, input);
+			
 		}
 		}catch(Exception e){
 			System.out.println(e);
