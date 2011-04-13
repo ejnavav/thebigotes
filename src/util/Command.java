@@ -27,6 +27,8 @@ public class Command {
 	public String get(String key){ return hm.get(key); }
 
 	public String type(){ return hm.get("command"); }
+	
+	public boolean hasKey(String key){ return hm.hasKey(key); }
 
 	public String toString(){
 		String commandStr = "";

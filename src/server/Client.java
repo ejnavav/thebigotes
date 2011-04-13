@@ -3,7 +3,6 @@ package server;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.*;
 
 public class Client {
 	Socket socket;
@@ -14,16 +13,14 @@ public class Client {
 	public Board board;
 	public boolean isReady= false;
 	public boolean hasTurn = false;
-
+	ClientListener clientListener;
 	public Client(Socket socket) {
 		try {
 			out = new PrintWriter(socket.getOutputStream(), true);
-//			in = new BufferedReader(new InputStreamReader(
-//					socket.getInputStream()));
 		} catch (Exception e) {
 
 		}
-		ClientListener clientListener = new ClientListener(this,socket);
+		clientListener = new ClientListener(this,socket);
 		clientListener.start();
 		System.out.println("After Thread Start");
 		
@@ -33,18 +30,6 @@ public class Client {
 
 	public void sendCommand(String command) throws Exception {
 		out.println(command);
-//		String input = null;
-//		try {
-//			while (true) {
-//				input = in.readLine();
-//				//System.out.println("Received " + input);
-//				if (input.length() > 0)
-//					return input;
-//			}
-//		} catch (Exception e) {
-//			throw e ;//System.out.println(e);
-//		}
-
 	}
 	public void addShip(String shipType,String orientation, String position )throws Exception{
 		try{
@@ -62,5 +47,20 @@ public class Client {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+	
+	public Socket getSocket(){
+		return this.socket;
+	}
+	
+	public void kill(){
+		clientListener.kill();
+		clientListener.interrupt();
+		try {
+			this.finalize();
+		}catch(Throwable e){
+			
+		}
+		
 	}
 }

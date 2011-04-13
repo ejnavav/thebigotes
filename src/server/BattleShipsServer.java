@@ -1,7 +1,5 @@
 package server;
 
-import java.util.HashMap;
-
 public class BattleShipsServer {
 	private int port;
 	public static BattleshipsController gameController;
@@ -25,5 +23,9 @@ public class BattleShipsServer {
 
 	public static void newClientConnected(Client client) {
 		gameController.newClientArrived(client);
-	}	
+	}
+	
+	public static void clientDisconnected(Client client){
+		gameController.clientDisconnected(client);
+	}
 }

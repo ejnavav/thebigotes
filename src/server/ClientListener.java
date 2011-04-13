@@ -20,6 +20,7 @@ private Client client;
 		}
 		}catch(Exception e){
 			System.out.println(e);
+			BattleShipsServer.clientDisconnected(client);
 		}
 
 
@@ -27,6 +28,14 @@ private Client client;
 	public ClientListener(Client client, Socket socket){
 		this.socket = socket;
 		this.client = client;
+	}
+	public void kill(){
+		try{
+			socket.close();
+		}catch (Exception e){
+			
+		}
+		
 	}
 	
 

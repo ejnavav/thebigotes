@@ -9,26 +9,29 @@ public class BattleshipsController {
 	gameState state;
 	Client player1;
 	Client player2;
+	final String PLAYER = "p";
+	final String VIEWER = "v";
 
 	public BattleshipsController() {
 		state = gameState.WAITING;
 	}
 
 	public enum gameState {
-		WAITING, POSITIONING, PROGRESS
+		WAITING, POSITIONING, PROGRESS, FINISHED
 	}
 
 	public void joinPlayer(Client client, String clientType) {
 		client.setType(clientType);
 		clients.add(client);
 		// TODO Verify Client Type
-		if (state.equals(gameState.WAITING) && clients.size() == 2) {
+		if (state.equals(gameState.WAITING) && player1 != null
+				& player2 != null) {
 			state = gameState.POSITIONING;
 		}
 		System.out.println("a New Player has joined ");
 		System.out.println("Game State: " + this.state);
 
-		if (clientType.equalsIgnoreCase("p")) { // Is a Player
+		if (clientType.equalsIgnoreCase(PLAYER)) { // Is a Player
 			if (player1 == null)
 				player1 = client;
 			else
@@ -70,6 +73,28 @@ public class BattleshipsController {
 		drawCommand.put("message", message);
 		return drawCommand;
 	}
+	
+	private void sendViewersCommand(String msg){
+		for (Client client:clients){
+			if (client.getType().equals(VIEWER)){
+				String board1 = (player1==null? new Board().ownView():player1.board.oponentView());
+				String board2 = (player2==null? new Board().ownView():player2.board.oponentView());
+				Command command = generateViewerDrawCommand(board1,board2,msg);
+				sendCommand(client,command.toString());
+			}
+		}
+	}
+	
+	// TODO move to command class
+	private Command generateViewerDrawCommand(String board1, String board2,
+			String message) {
+		Command drawCommand = new Command();
+		drawCommand.put("command", "draw");
+		drawCommand.put("board1", board1);
+		drawCommand.put("board2", board2);
+		drawCommand.put("message", message);
+		return drawCommand;
+	}
 
 	// TODO move to command class
 	private Command generateWaitCommand(String message) {
@@ -90,6 +115,14 @@ public class BattleshipsController {
 		return command;
 	}
 
+	// TODO move to command class
+	private Command generateGameOverCommand(String message) {
+		Command command = new Command();
+		command.put("command", "gameover");
+		command.put("message", message);
+		return command;
+	}
+
 	private void sendCommand(Client client, String command) {
 		try {
 			System.out.println("Sent From Server: " + command);
@@ -104,12 +137,10 @@ public class BattleshipsController {
 	public void newClientArrived(Client client) {
 		switch (state) {
 		case WAITING:
-			// joinPlayer(client);""
-			// sendCommand(client,generateFakePlayerJoinCommand());
 			// TODO Check Game Status and generate proper Status Command
 			// (Options)
 			Command joinCommand = new Command(
-					"command:join&message:please join the game&options:p,v");
+					"command:join&message:Enter 'p' to join as player or 'v' to join as visitor&options:p,v");
 			sendCommand(client, joinCommand.toString());
 			break;
 		}
@@ -132,6 +163,10 @@ public class BattleshipsController {
 		if (command.get("command").equals("fire")) {
 			fire(client, command);
 		}
+
+		if (command.get("command").equals("gameover")) {
+			gameOver();
+		}
 	}
 
 	private void fire(Client client, Command command) {
@@ -144,7 +179,12 @@ public class BattleshipsController {
 		} catch (Exception e) {
 			// TODO do something about this
 			System.out.println("can't fire there");
-			return;
+			String clientMsg = "Can't fire in that location, try again";
+			sendCommand(
+					client,
+					generateFireCommand(clientMsg, client.board.ownView(),
+							enemy.board.oponentView()).toString());
+			// return;
 		}
 
 		String enemyMsg = "";
@@ -163,17 +203,23 @@ public class BattleshipsController {
 				clientMsg = "You hit something";
 			}
 			// TODO refactor
-			sendCommand(
-					enemy,
-					generateDrawCommand(enemy.board.ownView(),
-							client.board.oponentView(), enemyMsg).toString());
-			sendCommand(
-					client,
-					generateFireCommand(clientMsg, client.board.ownView(),
-							enemy.board.oponentView()).toString());
+			if (!enemy.board.hasShipsAlive()) { // GAME OVER
+				finishGame(client, enemy);
+			} else {
+				sendCommand(
+						enemy,
+						generateDrawCommand(enemy.board.ownView(),
+								client.board.oponentView(), enemyMsg)
+								.toString());
+				sendCommand(
+						client,
+						generateFireCommand(clientMsg, client.board.ownView(),
+								enemy.board.oponentView()).toString());
+			}
+
 		} else {
 			System.out.println("no hit");
-			enemyMsg = "You are save. Its your turn to fire";
+			enemyMsg = "You are safe. Its your turn to fire";
 			clientMsg = "You wasted a bullet. Other player has the turn";
 			// TODO refactor
 			sendCommand(
@@ -186,6 +232,40 @@ public class BattleshipsController {
 							client.board.oponentView()).toString());
 			setPlayerTurn(enemy);
 		}
+	}
+
+	private void finishGame(Client client, Client enemy) {
+		String clientMsg = "Game Over, You nailed your oponent";
+		String enemyMsg = "Game Over, Your oponent nailed you";
+		sendCommand(enemy, generateGameOverCommand(enemyMsg).toString());
+		sendCommand(client, generateGameOverCommand(clientMsg).toString());
+		// TODO Generate PlayAgain command???
+
+	}
+
+	private void gameOver() {
+		state = gameState.WAITING;
+		if (player1 != null)
+			player1.kill();
+		if (player2 != null)
+			player2.kill();
+		player1 = null;
+		player2 = null;
+	}
+
+	public void clientDisconnected(Client client) {
+		Client enemy = getEnemy(client);
+		String msg = "Game Over, your oponent has disconnected";
+		for (int i = 0; i < clients.size(); i++) {
+			if (clients.get(i) == client) {
+				clients.get(i).kill();
+				clients.remove(i);
+			}
+		}
+		if (enemy != null) {
+			sendCommand(enemy, generateGameOverCommand(msg).toString());
+		}
+		client = null;
 	}
 
 	private void placeShip(Client client, Command command) {
@@ -231,9 +311,6 @@ public class BattleshipsController {
 						client,
 						generateDrawCommand(client.board.ownView(),
 								(new Board()).oponentView(), null).toString());
-				// sendCommand(client,
-				// generateDrawCommand(client.board.ownView(), board2,
-				// null).toString());
 
 				System.out
 						.println("sendCommand(client, generateDrawCommand(client.board.ownView(), board2, null).toString());");
