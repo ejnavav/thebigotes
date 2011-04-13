@@ -116,7 +116,7 @@ public class Board {
 	}
 
 	public int[] getRowCol(String position) {
-		int[] rowCol = new int[1];
+		int[] rowCol = new int[2];
 		char c = position.charAt(0);
 		int charInt = c;
 		int col = Integer.parseInt(position.substring(1, 2).toLowerCase()) - 1;
