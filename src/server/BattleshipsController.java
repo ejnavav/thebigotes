@@ -86,10 +86,10 @@ public class BattleshipsController {
 	}
 
 	private void sendViewersCommand(String msg) {
-		String board1 = (player1 == null ? new Board().ownView()
-				: player1.board.ownView());
-		String board2 = (player2 == null ? new Board().ownView()
-				: player2.board.ownView());
+		String board1 = (player1 == null ? new Board().oponentView()
+				: player1.board.oponentView());
+		String board2 = (player2 == null ? new Board().oponentView()
+				: player2.board.oponentView());
 		Command command = generateViewerDrawCommand(board1, board2, msg);
 		for (Client client : clients) {
 			if (client.getType().equals(VIEWER)) {
@@ -206,14 +206,14 @@ public class BattleshipsController {
 				System.out.println("ship destroyed");
 				enemyMsg = "Your " + ship.getType() + " is FUBAR";
 				clientMsg = "You destroyed the " + ship.getType();
-				viewersMsg = client.getName() + " Destroyed their enemie's "
+				viewersMsg = client.getName() + " Destroyed their enemies "
 						+ ship.getType();
 
 			} else { // hit something
 				System.out.println("hit something");
 				enemyMsg = "Your " + ship.getType() + " got hit";
 				clientMsg = "You hit something";
-				viewersMsg = client.getName() + " hit their enemie's "
+				viewersMsg = client.getName() + " hit their enemies "
 						+ ship.getType();
 			}
 			// TODO refactor
