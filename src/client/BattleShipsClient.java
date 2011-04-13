@@ -224,8 +224,8 @@ public class BattleShipsClient {
     }
 
     public static void main(String[] args) {
-         String host = "localhost";
-        // String host = "10.1.1.3";
+//         String host = "localhost";
+        String host = "10.1.1.6";
         int port = 54321;
         BattleShipsClient client = new BattleShipsClient(host, port);
         client.run();
