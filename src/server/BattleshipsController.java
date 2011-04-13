@@ -15,7 +15,7 @@ public class BattleshipsController {
 	}
 
 	public enum gameState {
-		WAITING, POSITIONING, PROGRESS
+		WAITING, POSITIONING, PROGRESS, FINISHED
 	}
 
 
@@ -132,7 +132,9 @@ public class BattleshipsController {
         } catch (Exception e) {
             //TODO do something about this
             System.out.println("can't fire there");
-            return;
+            String clientMsg = "Can't fire in that location, try again";
+            sendCommand(client, generateFireCommand(clientMsg, client.board.ownView(), enemy.board.oponentView()).toString());
+//            return;
         }
         
         String enemyMsg = ""; String clientMsg = "";
@@ -152,9 +154,19 @@ public class BattleshipsController {
             //TODO refactor
             sendCommand(enemy, generateDrawCommand(enemy.board.ownView(), client.board.oponentView(), enemyMsg).toString());
             sendCommand(client, generateFireCommand(clientMsg, client.board.ownView(), enemy.board.oponentView()).toString());
+            
+            if (!enemy.board.hasShipsAlive()){ //GAME OVER
+            	state = gameState.FINISHED;
+            	clientMsg = "Game Over, You nailed your oponent";
+            	enemyMsg = "Game Over, Your oponent nailed you";
+            	
+            	sendCommand(enemy, generateDrawCommand(enemy.board.ownView(), client.board.oponentView(), enemyMsg).toString());
+            	sendCommand(client, generateDrawCommand(client.board.ownView(), enemy.board.oponentView(), clientMsg).toString());
+            	//TODO Generate PlayAgain command???
+            }
         } else{
              System.out.println("no hit");
-            enemyMsg = "You are save. Its your turn to fire";
+            enemyMsg = "You are safe. Its your turn to fire";
             clientMsg = "You wasted a bullet. Other player has the turn";
             //TODO refactor
             sendCommand(client, generateDrawCommand(client.board.ownView(), enemy.board.oponentView(), clientMsg).toString());
