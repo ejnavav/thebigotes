@@ -6,7 +6,7 @@ import server.*;
 public class BattleShipsClient {
     private Communicator server = null;
     
-    //TODO set user and pass a InputStream to test
+    //TODO setUser() and pass it an InputStream to test
     private Scanner user = new Scanner(System.in);
 
     public BattleShipsClient(String host, int port){
@@ -23,12 +23,12 @@ public class BattleShipsClient {
         System.out.println("Connected");
         
         while(true){
-            System.out.println("Waiting for command...");
+            // System.out.println("Waiting for command...");
             Command command = waitForCommand();
             if (command == null){
                 break;
             }
-            System.out.println("Command received: "+command.toString());
+            // System.out.println("Command received: "+command.toString());
             handleCommand(command);
         }
     }
@@ -38,6 +38,7 @@ public class BattleShipsClient {
     }
     
 	public void sendMessage(String message){
+	    // System.out.println("sending to server: "+ message);
 	    server.sendMessage(message);
 	}
 	
@@ -53,7 +54,7 @@ public class BattleShipsClient {
     }
 
     public void handleCommand(Command command){
-        System.out.println("handling command");
+        // System.out.println("handling command");
 
         if (command.type().equals("join")) {
             join(command);
@@ -76,7 +77,7 @@ public class BattleShipsClient {
         else {
             System.out.println("Don't know about command" +command.toString());
         }
-        System.out.println("done handling command");
+        // System.out.println("done handling command");
     }
 
     public void join(Command command){
@@ -115,7 +116,6 @@ public class BattleShipsClient {
         reply.put("ship", command.get("ship"));
         reply.put("location", location);
         reply.put("orientation", orientation);
-        System.out.println("sending to server: "+ reply.toString());
         server.sendMessage(reply.toString());
     }
          
@@ -123,7 +123,10 @@ public class BattleShipsClient {
         String board1 = command.get("board1");
         String board2 = command.get("board2");
         drawGrid(board1, board2);
-        if(command.get("message") != null){
+        
+        String msg = command.get("message");
+        
+        if(msg != null && !msg.equals("null")){
             System.out.println(command.get("message"));
         }
     }
@@ -136,7 +139,7 @@ public class BattleShipsClient {
         String location = null;
 
         while(true) {
-            System.out.println("Enter location:");
+            System.out.println("Enter location to fire:");
             location = user.nextLine();
             try {
                 board.fire(location);
@@ -149,7 +152,6 @@ public class BattleShipsClient {
         Command reply = new Command();
         reply.put("command", command.type());
         reply.put("location", location);
-        System.out.println("sending to server: "+ reply.toString());
         server.sendMessage(reply.toString());
     }
     
@@ -183,6 +185,7 @@ public class BattleShipsClient {
                 printString+=("\t\t   ");
             }
         }
+        
         printString+=("\n" + letter + "  ");
         for (int i=0;i<player1.length();i++){
             printString+="| "+ player1.substring(i,i+1) + " ";
@@ -193,7 +196,6 @@ public class BattleShipsClient {
                 }
                 letter++;
                 printString+="|\n"+(i<player1.length()-1 ? letter:" ") + "  ";
-
             }
         }
         
@@ -229,6 +231,7 @@ public class BattleShipsClient {
     public static void main(String[] args) {
         String host = (args.length > 0) ? args[0] : "localhost";
         int port = (args.length > 1) ? Integer.parseInt(args[1]) : 54321;
+        
         BattleShipsClient client = new BattleShipsClient(host, port);
         client.run();
     }
