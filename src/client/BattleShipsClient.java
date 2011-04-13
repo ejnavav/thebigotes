@@ -2,11 +2,11 @@ package client;
 import java.util.*;
 import util.*;
 import server.*;
-import java.io.*;
 
 public class BattleShipsClient {
     private Communicator server = null;
     
+    //TODO set user and pass a InputStream to test
     private Scanner user = new Scanner(System.in);
 
     public BattleShipsClient(String host, int port){
@@ -40,7 +40,7 @@ public class BattleShipsClient {
 	public void sendMessage(String message){
 	    server.sendMessage(message);
 	}
-    
+	
     public Command waitForCommand(){
         String commandStr = server.waitForMessage();
         Command command = null;
@@ -70,6 +70,9 @@ public class BattleShipsClient {
         else if  (command.type().equals("fire")) {
             fire(command);
         }
+        else if  (command.type().equals("gameover")) {
+            gameover(command);
+        }
         else {
             System.out.println("Don't know about command" +command.toString());
         }
@@ -91,9 +94,6 @@ public class BattleShipsClient {
         System.out.println(command.get("message"));
         
         Board board = new Board(command.get("board1"));
-
-        boolean optionIsInvalid = true;
-
         String location = null;
         String orientation = null;
 
@@ -118,26 +118,7 @@ public class BattleShipsClient {
         System.out.println("sending to server: "+ reply.toString());
         server.sendMessage(reply.toString());
     }
-        
-    public String readValidOption(String[] options){
-        boolean optionIsInvalid = true;
-        String option = null;
-
-        while(optionIsInvalid){
-            option = user.nextLine();
-            for (String opt : options){
-                if (option.equals(opt)){
-                    optionIsInvalid = false;
-                    break;
-                }
-            }
-            if(optionIsInvalid){
-                System.out.println("Please select a valid option:");
-            }
-        }
-        return option;
-    }
-    
+         
     public void draw(Command command){
         String board1 = command.get("board1");
         String board2 = command.get("board2");
@@ -146,27 +127,27 @@ public class BattleShipsClient {
             System.out.println(command.get("message"));
         }
     }
-    
+        
     public void fire(Command command){
         drawGrid(command.get("board1"), command.get("board2"));
         System.out.println(command.get("message"));
-        // Board board = new Board(command.get("board2"));
+        Board board = new Board(command.get("board2"));
 
         String location = null;
 
-        // while(true) {
-        System.out.println("Enter location:");
-        location = user.nextLine();
-        // try {
-        //            board.fire(location);
-        //            break;
-        //        } catch (Exception e) {
-        //            System.out.println("Invalid location, try again.");
-        //        }
-        //    }
-
+        while(true) {
+            System.out.println("Enter location:");
+            location = user.nextLine();
+            try {
+                board.fire(location);
+                break;
+            } catch (Exception e) {
+                System.out.println("Invalid location, try again.");
+            }
+        }
+        
         Command reply = new Command();
-        reply.put("command", command.type() );
+        reply.put("command", command.type());
         reply.put("location", location);
         System.out.println("sending to server: "+ reply.toString());
         server.sendMessage(reply.toString());
@@ -176,11 +157,19 @@ public class BattleShipsClient {
         System.out.println(command.get("message"));
     }
     
+    public void gameover(Command command){
+        System.out.println(command.get("message"));
+        sendMessage("command:gameover");
+        server.disconnect();
+        System.exit(0);
+    }
+    
     public static void drawGrid(String player1,String player2){
         player1 = player1.replace('#',' ');
         player2 = player2.replace('#',' ');
         char letter = 'A';
-        String printString="   ";
+        String printString= "\n           Your Board                        Your Oponent's board\n\n";
+        printString += "   ";
         for (int j =0;j<2;j++){
             for (int i = 1; i<7;i++){
                 printString+=("  "+i+" ");
@@ -214,13 +203,32 @@ public class BattleShipsClient {
                 printString+=("\t\t   ");
             }
         }
+        printString += "\n";
         System.out.println(printString);
     }
 
+    public String readValidOption(String[] options){
+        boolean optionIsInvalid = true;
+        String option = null;
+
+        while(optionIsInvalid){
+            option = user.nextLine();
+            for (String opt : options){
+                if (option.equals(opt)){
+                    optionIsInvalid = false;
+                    break;
+                }
+            }
+            if(optionIsInvalid){
+                System.out.println("Please select a valid option:");
+            }
+        }
+        return option;
+    }
+
     public static void main(String[] args) {
-    	String host = "localhost";
-        // String host = "10.1.1.3";
-        int port = 54321;
+        String host = (args.length > 0) ? args[0] : "localhost";
+        int port = (args.length > 1) ? Integer.parseInt(args[1]) : 54321;
         BattleShipsClient client = new BattleShipsClient(host, port);
         client.run();
     }
