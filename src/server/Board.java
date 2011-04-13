@@ -4,10 +4,12 @@ import java.util.*;
 
 public class Board {
 	private class Cell {
+		//Contains All the information about a cell in the matrix
+		//If its hit, if is there a ship, etc.
 		String cellString;
 		Ship ship;
 		boolean isFired;
-
+		
 		public Cell(int row, int col) {
 			int charInt = 97 + row;
 			char rowChar = (char) charInt;
@@ -20,23 +22,25 @@ public class Board {
 
 		public void setShip(Ship ship) {
 			this.ship = ship;
-			this.ship.addCell(cellString);
 		}
 
+		//Returns the cells characters to be presented to the client
+		//if oponent view is set to true returns the way the oponent would view it
 		public String toString(boolean oponentView) {
 			if (ship == null) {
-				if (!isFired)
+				if (!isFired)			//if hasn't been fired yet
 					return SPACE_CHAR;
 				else
-					return MISSED_CHAR;
-			} else if (!isFired)
-				return (oponentView == true ? SPACE_CHAR : ship.getLetter());
-			else if (!ship.isDestroyed())
+					return MISSED_CHAR;	//if is fired but no ship on it (miss)
+			} else if (!isFired)		//if there's a Ship
+				return (oponentView == true ? SPACE_CHAR : ship.getLetter()); //if hasnt been fired
+			else if (!ship.isDestroyed())//if is hit
 				return HIT_CHAR;
 			else
-				return ship.getLetter().toUpperCase();
+				return ship.getLetter().toUpperCase();//if the ship's destroyed
 		}
 
+		//Returns the cell in a string. eg: a3
 		public String getCellString() {
 			return cellString;
 		}
@@ -45,20 +49,24 @@ public class Board {
 			return isFired;
 		}
 
+		//Method to call when firing a cell
 		public void fire() {
 			if (ship != null)
 				ship.hit();
 			isFired = true;
 		}
 	}
-
-	private int size = 6;
+	
+	private ArrayList<Ship> ships = new ArrayList<Ship>(); //Contains all the ships the board has
+														   //to make it easy to know when game is over
+	private int size = 6; //Size of the matrix (6x6)
 	Cell[][] cells = new Cell[size][size];
 
 	protected final String SPACE_CHAR = "#";
 	protected final String MISSED_CHAR = "o";
 	protected final String HIT_CHAR = "*";
 
+	//Constructor to be called when a new board is created
 	public Board() {
 		for (int i = 0; i < cells.length; i++) {
 			for (int j = 0; j < cells.length; j++) {
@@ -66,7 +74,9 @@ public class Board {
 			}
 		}
 	}
-
+	
+	//Constructor to be called by the client to generate a board from 
+	//a given String (Board String)
 	public Board(String boardString) {
 		this();
 		HashMap<String, Ship> shipTypes = new HashMap<String, Ship>();
@@ -87,7 +97,6 @@ public class Board {
 				row++;
 				col = 0;
 			}
-
 			String boardChar = boardString.substring(i, i++);
 			if (!boardChar.equals(SPACE_CHAR)) {
 				if (boardChar.equals(MISSED_CHAR) || boardChar.equals(HIT_CHAR)) {
@@ -100,8 +109,10 @@ public class Board {
 		}
 	}
 
+	//To Fire a Cell,
+	//Receives the cell as a string eg:a3
 	public boolean fire(String cell) throws Exception {
-
+		cell = cell.toLowerCase();
 		int row = getRowCol(cell)[0];
 		int col = getRowCol(cell)[1];
 		if (cells[row][col].isFired()) {
@@ -115,6 +126,8 @@ public class Board {
 			return false;
 	}
 
+	//Returns an array with the row in the index 0 and the col in index 1
+	//from a given cell String. eg: b4
 	public int[] getRowCol(String position) {
 		int[] rowCol = new int[2];
 		char c = position.charAt(0);
@@ -131,6 +144,8 @@ public class Board {
 		int col = getRowCol(position)[1];
 		return cells[row][col].getShip();
 	}
+	
+	//Generates the board to be sent to the client
 	private String getBoardString(boolean oponentView){
 		String board = "";
 		for (Cell[] cellRow : cells) {
@@ -149,32 +164,17 @@ public class Board {
 		return getBoardString(true);
 	}
 
+	//To Place the ships in the board
 	public void placeShip(String shipType, String orientation, String pos)
 			throws Exception {
 
-		// To Convert the row Letter to a integer Position in the array
-		char c = pos.charAt(0);
-		int charInt = c;
-		int col = Integer.parseInt(pos.substring(1, 2).toLowerCase()) - 1;
-		int row = (charInt - 97);
-
+		// To Convert the row Letter to the integer Positions in the array
+		int row = getRowCol(pos)[0];
+		int col = getRowCol(pos)[1];
 		Ship ship = new Ship(shipType, orientation, pos);
 		int shipSize = ship.getSize();
 
-		// if (!verifyBounds(shipSize, position, orientation)
-		// || !verifyClash(shipSize, position, orientation)) {
-		// throw new Exception("Ship Can't be placed there");
-		// }
-
-		// for (int i = position)
-		// int increment = orientation.equalsIgnoreCase("h") ? 1 : this.size;
-		// for (int i = position; i < position + ((shipSize - 1) * size); i = i
-		// + increment) {
-		// cells[i] = ship.getLetter();
-		// }
-
 		try {
-			// for (int i = 0; i < ship.getSize(); i++) {
 			if (!verifyClash(shipSize, row, col, orientation))
 				throw new Exception("Verifying Clash");
 			for (int i = 0; i < ship.getSize(); i++) {
@@ -184,32 +184,30 @@ public class Board {
 				} else
 					row++;
 			}
+			ships.add(ship);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 
 	}
+	
+	public boolean hasShipsAlive(){
+		for (int i =0;i<ships.size();i++){
+			if (!ships.get(i).isDestroyed()) return true;
+		}
+		return false;
+	}
 
 	private boolean verifyClash(int shipSize, int row, int col,
 			String orientation) {
-		// int increment = orientation.equalsIgnoreCase("h") ? 1 : this.size;
-		// for (int i = position; i < position + ((shipSize - 1) * size); i = i
-		// + increment) {
-		// if (!cells[i].equals("SPACE_CHAR")) {
-		// return false;
-		// }
-		// }
-		// return true;
 		try {
 			if (!verifyBounds(shipSize, row, col, orientation))
 				return false;
 			for (int i = 0; i < shipSize; i++) {
 
-				// if (verifyBounds(shipSize, row, col, orientation)) {
 				if (cells[row][col].getShip() != null)
 					return false;
-				// }else return false;
 
 				if (orientation.equals("h"))
 					col++;
@@ -220,33 +218,10 @@ public class Board {
 		} catch (Exception e) {
 			return false;
 		}
-
-		// if (cells[row][col].getShip() == null)
-		// return true;
-		// return false;
 	}
 
 	private boolean verifyBounds(int shipSize, int row, int col,
 			String orientation) {
-		// Position out of bound
-		// if (position < 0 || position >= size * size) {
-		// return false;
-		// }
-		//
-		// // Ship Wont fit in the board
-		// if (orientation.equalsIgnoreCase("h")) {
-		// if (position + shipSize > (Math.ceil((double)(position+1) /
-		// this.size) * this.size)) {
-		// return false;
-		// } else
-		// return true;
-		// } else if (orientation.equalsIgnoreCase("v")) {
-		// if (position + (this.size * (shipSize - 1)) >= size * size) {
-		// return false;
-		// } else
-		// return true;
-		// }
-
 		try {
 			for (int i = 0; i < shipSize; i++) {
 				cells[row][col].toString();
@@ -261,8 +236,7 @@ public class Board {
 		return true;
 	}
 
-	// private boolean verifyClash(int shipSize, int row, int col, String
-	// orientation) {
+	//Returns the possible positions to place a given ship
 	public ArrayList<String> getPositionOptions(Ship ship) {
 		ArrayList<String> positions = new ArrayList<String>();
 		int row = 0;
@@ -273,11 +247,9 @@ public class Board {
 				col = 0;
 			}
 			if (verifyClash(ship.getSize(), row, col, "h")) {
-				// positions.add("h@"+(char)(96+row)+col);
 				positions.add("h@" + cells[row][col].getCellString());
 			}
 			if (verifyClash(ship.getSize(), row, col, "v")) {
-				// positions.add("v@"+(char)(96+row)+col);
 				positions.add("v@" + cells[row][col].getCellString());
 			}
 			col++;
