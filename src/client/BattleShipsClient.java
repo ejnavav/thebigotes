@@ -33,10 +33,6 @@ public class BattleShipsClient {
         }
     }
     
-    // public InputStream setTestImputStream(){
-    //     
-    // }
-    
     public boolean connect(){
         return server.connect();
     }
@@ -93,27 +89,26 @@ public class BattleShipsClient {
     public void position(Command command){
         drawGrid(command.get("board1"), command.get("board2"));
         System.out.println(command.get("message"));
-        // Board board = new Board(command.get("board1"));
+        
+        Board board = new Board(command.get("board1"));
 
         boolean optionIsInvalid = true;
 
         String location = null;
         String orientation = null;
 
-        //TODO validations
-        // while(true) {
+        while(true) {
             System.out.println("Enter location:");
             location = user.nextLine();
             System.out.println("Enter orientation h or v:");
             orientation = user.nextLine();
-
-            // try {
-            //                 board.placeShip(command.get("ship"), location, orientation);
-            //                 break;
-            //             } catch (Exception e) {
-            //                 System.out.println("Invalid location or orientation.");
-            //             }
-        // }
+            try {
+                board.placeShip(command.get("ship"), orientation, location);
+                break;
+            } catch (Exception e) {
+                System.out.println("Invalid location or orientation, try again.");
+            }
+        }
 
         Command reply = new Command();
         reply.put("command", command.type() );
@@ -181,7 +176,6 @@ public class BattleShipsClient {
         System.out.println(command.get("message"));
     }
     
-    
     public static void drawGrid(String player1,String player2){
         player1 = player1.replace('#',' ');
         player2 = player2.replace('#',' ');
@@ -224,8 +218,8 @@ public class BattleShipsClient {
     }
 
     public static void main(String[] args) {
-         String host = "localhost";
-//        String host = "10.1.1.6";
+    	String host = "localhost";
+        // String host = "10.1.1.3";
         int port = 54321;
         BattleShipsClient client = new BattleShipsClient(host, port);
         client.run();

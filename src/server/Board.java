@@ -168,6 +168,10 @@ public class Board {
 	public void placeShip(String shipType, String orientation, String pos)
 			throws Exception {
 
+		if (!orientation.equalsIgnoreCase("h") && !orientation.equalsIgnoreCase("v")){
+			throw new Exception("Invalid option:" +orientation);
+		}
+		
 		// To Convert the row Letter to the integer Positions in the array
 		int row = getRowCol(pos)[0];
 		int col = getRowCol(pos)[1];
@@ -186,7 +190,7 @@ public class Board {
 			}
 			ships.add(ship);
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			throw e;
 		}
 
