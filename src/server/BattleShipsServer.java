@@ -13,14 +13,12 @@ public class BattleShipsServer {
 	public void start() {		
 		ConnectionListener listener = new ConnectionListener();
 		listener.start();
-
 	}
 		
 	public static void main(String[] args) {
 		BattleShipsServer server = new BattleShipsServer(54321);
 	    server.start();
 		gameController = new BattleshipsController();
-
 	}
 
 	public static void newClientConnected(Client client) {
