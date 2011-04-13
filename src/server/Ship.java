@@ -2,16 +2,13 @@ package server;
 import java.util.* ;
 
 public class Ship {
-	// private static String types[] = { "battleship", "cruiser", "destroyer", "submarine" }
 	private HashMap<String, Integer> types = new HashMap<String, Integer>();
 	private int size;
 	private String type;
 	private String orientation;
 	private String position;
-	ArrayList<String> cells = new ArrayList<String>();
 	private boolean isDestroyed;
 	private boolean isHit;
-	
 	private int hitParts=0;
 	
 	public Ship(String type, String orientation, String position) {
@@ -40,17 +37,17 @@ public class Ship {
 	public String getLetter(){
 		return this.type.substring(0,1);
 	}
+	
 	public void hit(){
 		isHit = true;
 		if (!isDestroyed) hitParts++;
 		if (hitParts==size) isDestroyed= true;
 	}
+	
 	public boolean isHit(){
 		return isHit;
 	}
-	public void addCell(String cell){
-		this.cells.add(cell);
-	}
+	
 	public boolean isDestroyed(){
 		return isDestroyed;
 	}

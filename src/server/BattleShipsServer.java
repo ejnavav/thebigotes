@@ -15,7 +15,7 @@ public class BattleShipsServer {
 		listener.start();
 
 	}
-
+		
 	public static void main(String[] args) {
 		BattleShipsServer server = new BattleShipsServer(54321);
 	    server.start();

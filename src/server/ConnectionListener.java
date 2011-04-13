@@ -7,7 +7,6 @@ import java.net.Socket;
 public class ConnectionListener extends Thread {
 	public void run() {
 		int port = 54321;
-
 		ServerSocket serverSocket = null;
 
 		try {
