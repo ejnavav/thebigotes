@@ -8,6 +8,7 @@ public class BattleShipsClient {
     
     //TODO setUser() and pass it an InputStream to test
     private Scanner user = new Scanner(System.in);
+    private boolean imViewer = true;
 
     public BattleShipsClient(String host, int port){
         server = new Communicator(host, port);
@@ -60,6 +61,7 @@ public class BattleShipsClient {
             join(command);
         }
         else if  (command.type().equals("position")) {
+            imViewer = false;
             position(command);
         }
         else if  (command.type().equals("draw")) {
@@ -166,11 +168,17 @@ public class BattleShipsClient {
         System.exit(0);
     }
     
-    public static void drawGrid(String player1,String player2){
+    public void drawGrid(String player1,String player2){
         player1 = player1.replace('#',' ');
         player2 = player2.replace('#',' ');
         char letter = 'A';
-        String printString= "\n           Your Board                        Your Oponent's board\n\n";
+        
+        String printString = "\n           Your Board                        Your Oponent's board\n\n";
+        
+        if(imViewer){
+            printString = "\n           Player1 Board                        Player2 board\n\n";
+        }
+        
         printString += "   ";
         for (int j =0;j<2;j++){
             for (int i = 1; i<7;i++){
