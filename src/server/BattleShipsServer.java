@@ -20,8 +20,9 @@ public class BattleShipsServer {
 	 *  Starts the Server
 	 *  Creates a Connection Listener (Separate Thread)
 	 */
-	public void start() {		
-		ConnectionListener listener = new ConnectionListener();
+	public void start() {
+		gameController = new BattleshipsController();
+		ConnectionListener listener = new ConnectionListener(this.port);
 		listener.start();
 	}
 		
@@ -31,7 +32,7 @@ public class BattleShipsServer {
 	public static void main(String[] args) {
 		BattleShipsServer server = new BattleShipsServer(54321);
 	    server.start();
-		gameController = new BattleshipsController();
+		
 	}
 
 	/**

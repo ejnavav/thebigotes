@@ -9,8 +9,11 @@ import java.net.Socket;
  * Creates a new Client for every Connection Attempt
  */
 public class ConnectionListener extends Thread {
+	int port;
+	public ConnectionListener(int port){
+		this.port = port;
+	}
 	public void run() {
-		int port = 54321;
 		ServerSocket serverSocket = null;
 
 		try {
