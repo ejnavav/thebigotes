@@ -32,18 +32,18 @@ public class ClientCommunicatorTest {
 		assertTrue(communicator.waitForMessage().equals("Hello World"));
 		server.quit();
 	}
-//	
-//	@Test
-//	public void should_send_message() {
-//		int port = 54323;
-//		server = new FakeServer(port);
-//		server.start();
-//		server.waitUntilReady();
-//		communicator = new Communicator(host, port);
-//		communicator.connect();
-//		communicator.sendMessage("The Bigotes");
-//		assertTrue(server.waitForMessage().equals("The Bigotes"));
-//		communicator.disconnect();
-//		server.quit();
-//	}
+	
+	@Test
+	public void should_send_message() {
+		int port = 54323;
+		server = new FakeServer(port);
+		server.start();
+		server.waitUntilReady();
+		communicator = new Communicator(host, port);
+		communicator.connect();
+		communicator.sendMessage("The Bigotes");
+		assertTrue(server.waitForMessage().equals("The Bigotes"));
+		communicator.disconnect();
+		server.quit();
+	}
 }

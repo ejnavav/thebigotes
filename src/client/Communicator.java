@@ -7,6 +7,9 @@ import java.net.*;
 /**
  * Class in charge of all the communication with the client
  * It sends a receives messages using a socket connection.
+ * 
+ * @author John Kolovos
+ * 
  */
 public class Communicator {
 	String host;
