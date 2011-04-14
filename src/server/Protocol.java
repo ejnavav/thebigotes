@@ -3,9 +3,9 @@ package server;
 import util.Command;
 
 /**
-* Server protocol for validating all recived and sent commants to the client
+* Server protocol for validating all commands received from the client
 * 
-* @author ioannis
+* @author John Kolovos
 * 
 */
 public class Protocol {
@@ -15,8 +15,21 @@ public class Protocol {
     public Protocol() {
     }
 
-    public void setLastCommand(Command command) { this.lastCommand = command; }
-
+    /**
+     * Sets the last command to this command
+     * 
+     * @param command
+     */
+    public void setLastCommand(String commandStr) {
+    	this.lastCommand = new Command(commandStr);
+    }
+    
+    /**
+     * Check if a command received by client is valid
+     * 
+     * @param command
+     * @return
+     */
     public boolean isValidCommand(String command){
 
         Command c = null;
@@ -52,18 +65,42 @@ public class Protocol {
         }
     }
     
+    /**
+     * Check if the command to test is the same as the last command sent 
+     * 
+     * @param command
+     * @return true if is the same fale otherwise
+     */
     private boolean isSameType(Command command) {
         return lastCommand.type().equals(command.type());
     }
     
+    /**
+     * Checks if the join command is valid
+     * 
+     * @param command
+     * @return true if valid false otherwise
+     */
     private boolean checkJoinCommand (Command command){
         return command.hasKey("as");
     }
 
+    /**
+     * Checks if the position commmand is valid
+     * 
+     * @param command
+     * @return true if valid false otherwise
+     */
     private boolean checkPositionCommand (Command command){
         return (command.hasKey("ship") && command.hasKey("location") && command.hasKey("orientation"));
     }
 
+    /**
+     * Check if the fire command is valid
+     * 
+     * @param command
+     * @return true
+     */
     private boolean checkFireCommand (Command command){
         return command.hasKey("location");
     }
