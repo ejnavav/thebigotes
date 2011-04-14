@@ -4,7 +4,13 @@ import java.util.*;
 
 import util.*;
 
+/**
+ * 	Class that holds the Game State and the game Rules
+ *	Controls the flow of the game
+ *	Process commands received from the Clients
+ */
 public class BattleshipsController {
+	/** Holds all the connected Clients	 */
 	ArrayList<Client> clients = new ArrayList<Client>();
 	gameState state;
 	Client player1;
@@ -12,6 +18,9 @@ public class BattleshipsController {
 	final String PLAYER = "p";
 	final String VIEWER = "v";
 
+	/**
+	 *  Class Constructor
+	 */
 	public BattleshipsController() {
 		state = gameState.WAITING;
 	}
@@ -20,24 +29,32 @@ public class BattleshipsController {
 		WAITING, POSITIONING, PROGRESS, FINISHED
 	}
 
+	/**
+	 * Joins a player to the Game when the Join Command is received
+	 * @param client The Client who sent the Join Command
+	 * @param clientType The Type of Client ("p"=player "v"=viewer
+	 */
 	public void joinPlayer(Client client, String clientType) {
-		if (player1 == null || player2 == null)
+		/** If Both players are joined is automatically set as viewer*/
+		if (player1 == null || player2 == null) 
 			client.setType(clientType);
 		else
 			client.setType(VIEWER);
+		
 		clients.add(client);
 		if (state.equals(gameState.WAITING) && player1 != null
 				& player2 != null) {
 			state = gameState.POSITIONING;
 		}
+		// for debugging purposes 
 		System.out.println("a New Player has joined ");
 		System.out.println("Game State: " + this.state);
 
-		if (client.getType().equalsIgnoreCase(PLAYER)) { // Is a Player
-			if (player1 == null) {
+		if (client.getType().equalsIgnoreCase(PLAYER)) { //If Is a Player
+			if (player1 == null) {						
 				player1 = client;
 				client.setName("Player1");
-			} else{
+			} else{									
 				player2 = client;
 				client.setName("Player2");
 			}
@@ -46,7 +63,7 @@ public class BattleshipsController {
 					"submarine");
 			sendCommand(client, submarineCommand.toString());
 			sendViewersCommand(client.getName() + " has joined the game");
-		} else if (client.getType().equalsIgnoreCase(VIEWER)) {
+		} else if (client.getType().equalsIgnoreCase(VIEWER)) { //Is a Viewer
 			String board1 = (player1 == null ? new Board().ownView()
 					: player1.board.ownView());
 			String board2 = (player2 == null ? new Board().ownView()
@@ -85,11 +102,16 @@ public class BattleshipsController {
 		return drawCommand;
 	}
 
+	/**
+	 * Sends a Message to all the viewers (if any)
+	 * Generates the Draw Command to be sent to the viewers
+	 * @param msg The message to be sent
+	 */
 	private void sendViewersCommand(String msg) {
-		String board1 = (player1 == null ? new Board().ownView()
-				: player1.board.ownView());
-		String board2 = (player2 == null ? new Board().ownView()
-				: player2.board.ownView());
+		String board1 = (player1 == null ? new Board().oponentView()
+				: player1.board.oponentView());
+		String board2 = (player2 == null ? new Board().oponentView()
+				: player2.board.oponentView());
 		Command command = generateViewerDrawCommand(board1, board2, msg);
 		for (Client client : clients) {
 			if (client.getType().equals(VIEWER)) {
@@ -136,6 +158,10 @@ public class BattleshipsController {
 		return command;
 	}
 
+	/**
+	 * @param client The client who's receiving the command
+	 * @param command
+	 */
 	private void sendCommand(Client client, String command) {
 		try {
 			System.out.println("Sent From Server: " + command);
@@ -147,6 +173,10 @@ public class BattleshipsController {
 		}
 	}
 
+	/**
+	 * Method called when The connection listener receives a new connection 
+	 * @param client The client who has just connected
+	 */
 	public void newClientArrived(Client client) {
 
 			// TODO Check Game Status and generate proper Status Command
@@ -157,6 +187,12 @@ public class BattleshipsController {
 
 	}
 
+	/**
+	 * Processes all the commands received from the clients 
+	 * and executes the designated operation
+	 * @param client
+	 * @param message
+	 */
 	public void processClientCommand(Client client, String message) {
 		// HashMap<String, String> command = null;
 		Command command = new Command(message);
@@ -180,17 +216,23 @@ public class BattleshipsController {
 		}
 	}
 
+	/**
+	 * Calls the fire command in the board when requested by clients
+	 * @param client
+	 * @param command
+	 */
 	private void fire(Client client, Command command) {
 		String location = command.get("location");
 		Client enemy = getEnemy(client);
 		boolean hit = false;
-		System.out.println("somebody fired");
+		System.out.println("somebody fired"); //Debugging purposes
 		try {
-			hit = enemy.board.fire(location);
-		} catch (Exception e) {
-			System.out.println("can't fire there");
+			hit = enemy.board.fire(location); //the fire method is called 
+		} catch (Exception e) { // if the command fails (wrong place, etc)
+			System.out.println("Fire command denied");
 			String clientMsg = "Can't fire in that location, try again";
-			sendCommand(
+			//Send the command again
+			sendCommand( 
 					client,
 					generateFireCommand(clientMsg, client.board.ownView(),
 							enemy.board.oponentView()).toString());
@@ -199,21 +241,21 @@ public class BattleshipsController {
 		String enemyMsg = "";
 		String clientMsg = "";
 		String viewersMsg = "";
-		if (hit) {
+		if (hit) { //If a Ship got hit
 			System.out.println("hit");
 			Ship ship = enemy.board.getShip(location);
 			if (ship.isDestroyed()) { //Hit Something but didn't destroy it
 				System.out.println("ship destroyed");
 				enemyMsg = "Your " + ship.getType() + " is FUBAR";
 				clientMsg = "You destroyed the " + ship.getType();
-				viewersMsg = client.getName() + " Destroyed their enemie's "
+				viewersMsg = client.getName() + " Destroyed their enemies "
 						+ ship.getType();
 
 			} else { // hit something
 				System.out.println("hit something");
 				enemyMsg = "Your " + ship.getType() + " got hit";
 				clientMsg = "You hit something";
-				viewersMsg = client.getName() + " hit their enemie's "
+				viewersMsg = client.getName() + " hit their enemies "
 						+ ship.getType();
 			}
 			// TODO refactor
@@ -232,7 +274,7 @@ public class BattleshipsController {
 				sendViewersCommand(viewersMsg);
 			}
 
-		} else {
+		} else { //If Missed their shot
 			System.out.println("no hit");
 			enemyMsg = "You are safe. Its your turn to fire";
 			clientMsg = "You wasted a misil. Other player has the turn";
@@ -252,6 +294,11 @@ public class BattleshipsController {
 		}
 	}
 
+	/**
+	 * When all the ships of one of the players are down
+	 * @param client who sent the last fire command
+	 * @param enemy
+	 */
 	private void finishGame(Client client, Client enemy) {
 		String clientMsg = "Game Over, You nailed your oponent";
 		String enemyMsg = "Game Over, Your oponent nailed you";
@@ -264,6 +311,9 @@ public class BattleshipsController {
 		// TODO Generate PlayAgain command???
 	}
 
+	/**
+	 * Finishes the current game and sets the game to initial state
+	 */
 	private void gameOver() {
 		state = gameState.WAITING;
 		if (player1 != null)
@@ -274,6 +324,10 @@ public class BattleshipsController {
 		player2 = null;
 	}
 
+	/**
+	 * when a clients loses connection to the server
+	 * @param client
+	 */
 	public void clientDisconnected(Client client) {
 		for (int i = 0; i < clients.size(); i++) {
 			if (clients.get(i) == client) {
@@ -291,16 +345,22 @@ public class BattleshipsController {
 		client = null;
 	}
 
+	/**
+	 * Method for placing ships on the board
+	 * @param client Who sent the positioning command
+	 * @param command the command itself
+	 */
 	private void placeShip(Client client, Command command) {
 		String shipType = command.get("ship");
 		String position = command.get("location");
 		String orientation = command.get("orientation");
-		// Ship ship = new Ship(shipType,orientation,position);
 		try {
+			// Tries to place the ship in the selected position
 			client.addShip(shipType, orientation, position);
 			String viewersMsg = client.getName() + " has placed their "
 					+ shipType;
 			sendViewersCommand(viewersMsg);
+			//The sequence for adding ships
 			if (shipType.equalsIgnoreCase("cruiser")) {
 				Command destroyerCommand = generatePositionCommand(client,
 						"battleship");
@@ -318,45 +378,46 @@ public class BattleshipsController {
 						"cruiser");
 				sendCommand(client, battleshipCommand.toString());
 			}
-			if (shipType.equalsIgnoreCase("battleship")) {
-				// TODO put this in a function
-				System.out.println("shipType.equalsIgnoreCase");
-				System.out
-						.println("String board2 = getEnemy(client).board.oponentView();");
-
-				sendCommand(client,
-						generateDrawCommand(client.board.ownView(),
-								(new Board()).oponentView(), null).toString());
-				System.out
-						.println("sendCommand(client, generateDrawCommand(client.board.ownView(), board2, null).toString());");
-
-				client.isReady = true;
-
-				if (player1.isReady) { // player1 is ready
-					if (player2 == null) {
-						sendCommand(
-								player1,
-								generateWaitCommand(
-										"Waiting for your oponent")
-										.toString());
-					} else if (player2.isReady) {
-						System.out.println("player2.isReady");
-						viewersMsg = "The Battle has just Begun";
-						sendViewersCommand(viewersMsg);
-						startGame();
-					} else { // player2 is not ready
-						sendCommand(
-								player1,
-								generateWaitCommand(
-										"wait other player to position")
-										.toString());
-					}
-				} else if (player2.isReady) {
-					sendCommand(
-							player2,
-							generateWaitCommand("wait other player to position")
-									.toString());
-				}
+			//All the ships have been placed
+			if (shipType.equalsIgnoreCase("battleship")) { 
+				allShipsPlaced(client);
+//				// TODO Move to different method
+//				System.out
+//						.println("String board2 = getEnemy(client).board.oponentView();");
+//
+//				sendCommand(client,
+//						generateDrawCommand(client.board.ownView(),
+//								(new Board()).oponentView(), null).toString());
+//				System.out
+//						.println("sendCommand(client, generateDrawCommand(client.board.ownView(), board2, null).toString());");
+//
+//				client.isReady = true;
+//
+//				if (player1.isReady) { // player1 is ready
+//					if (player2 == null) {
+//						sendCommand(
+//								player1,
+//								generateWaitCommand(
+//										"Waiting for your oponent")
+//										.toString());
+//					} else if (player2.isReady) {
+//						System.out.println("player2.isReady");
+//						viewersMsg = "The Battle has just Begun";
+//						sendViewersCommand(viewersMsg);
+//						startGame();
+//					} else { // player2 is not ready
+//						sendCommand(
+//								player1,
+//								generateWaitCommand(
+//										"wait other player to position")
+//										.toString());
+//					}
+//				} else if (player2.isReady) {
+//					sendCommand(
+//							player2,
+//							generateWaitCommand("wait other player to position")
+//									.toString());
+//				}
 			}
 
 		} catch (Exception e) {
@@ -366,7 +427,52 @@ public class BattleshipsController {
 			this.sendCommand(client, errorCommand.toString());
 		}
 	}
+	
+	private void allShipsPlaced(Client client){
+		// TODO Move to different method
+		String viewersMsg;
+		System.out
+				.println("String board2 = getEnemy(client).board.oponentView();");
 
+		sendCommand(client,
+				generateDrawCommand(client.board.ownView(),
+						(new Board()).oponentView(), null).toString());
+		System.out
+				.println("sendCommand(client, generateDrawCommand(client.board.ownView(), board2, null).toString());");
+
+		client.isReady = true;
+
+		if (player1.isReady) { // player1 is ready
+			if (player2 == null) {
+				sendCommand(
+						player1,
+						generateWaitCommand(
+								"Waiting for your oponent")
+								.toString());
+			} else if (player2.isReady) {
+				System.out.println("player2.isReady");
+				viewersMsg = "The Battle has just Begun";
+				sendViewersCommand(viewersMsg);
+				startGame();
+			} else { // player2 is not ready
+				sendCommand(
+						player1,
+						generateWaitCommand(
+								"wait other player to position")
+								.toString());
+			}
+		} else if (player2.isReady) {
+			sendCommand(
+					player2,
+					generateWaitCommand("wait other player to position")
+							.toString());
+		}
+	}
+
+	/**
+	 * Sents the next player in turn to fire
+	 * @param player
+	 */
 	private void setPlayerTurn(Client player) {
 		if (player == player1) {
 			player1.hasTurn = true;
@@ -377,6 +483,10 @@ public class BattleshipsController {
 		}
 	}
 
+	/**
+	 * @param client
+	 * @return the client's enemy
+	 */
 	private Client getEnemy(Client client) {
 		if (client == player1) {
 			return player2;
@@ -385,6 +495,9 @@ public class BattleshipsController {
 		}
 	}
 
+	/**
+	 * When both players are ready 
+	 */
 	private void startGame() {
 		System.out.println("game started");
 		String fireMsg = "Your turn, select location to fire";
