@@ -9,7 +9,7 @@ public class FakeServer extends Thread {
 	private Socket clientSocket = null;
 	private int port;
 	private PrintWriter out;
-	private Scanner in;
+	private Scanner in = null;
 	boolean ready = false;
 	boolean quit = false;
 
@@ -26,8 +26,8 @@ public class FakeServer extends Thread {
 			System.exit(0);
 		}
         
-        ready = true;
-
+		ready = true;
+		
 		try {
 			System.out.println("Waiting for client 1...");
 			clientSocket = serverSocket.accept();
@@ -43,14 +43,17 @@ public class FakeServer extends Thread {
 		} catch (IOException e) {
 			System.out.println("Couldn't get in or out stream" + e.getMessage());
 		}
-				
+		
 		while(!quit){
 		    try{Thread.sleep(10);}catch (Exception e) {};
 		}
 	}
 	
 	public void waitUntilReady(){
-	    while(!ready){ System.out.println("wait for ready");};
+	    while(!ready){
+	    	System.out.println("wait for ready");
+	    	try{Thread.sleep(100);}catch (Exception e) {};
+	    }
 	}
 	
 	public void quit() {
@@ -75,9 +78,15 @@ public class FakeServer extends Thread {
 		out.println(msg);
 	}
 	
+	
 	public String waitForMessage(){
 		String inputLine;
-		System.out.println("Reading message");	
+		System.out.println("Waiting for client");
+		while (in == null){
+			System.out.println("Waiting for client");
+			try{Thread.sleep(100);}catch (Exception e) {};
+		}
+		System.out.println("Reading message");
 		if (in.hasNextLine()){
 			inputLine = in.nextLine();
 			System.out.println("Received: " + inputLine);	

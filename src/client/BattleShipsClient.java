@@ -12,6 +12,9 @@ import server.*;
  * game logic and it doesn't keep any state of the game
  * either.
  * 
+ * @author John Kolovos
+ * @author Victor Nava
+ * 
  */
 public class BattleShipsClient {
     

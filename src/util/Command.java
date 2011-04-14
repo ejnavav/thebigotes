@@ -17,6 +17,8 @@ import java.util.*;
  * Is basically a wrapper of a HashMap with only some
  * methods exposed and some extra functionality added
  * 
+ * @author John Kolovos
+ * 
  */
 public class Command {
 	private HashMap<String, String> hm = null;
