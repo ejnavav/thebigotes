@@ -1,6 +1,7 @@
 package server;
 
 /**
+ * @author Eduardo Nava
  * Game Server Class
  *
  */

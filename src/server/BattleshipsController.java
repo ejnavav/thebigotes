@@ -66,10 +66,10 @@ public class BattleshipsController {
 			sendCommand(client, submarineCommand.toString());
 			sendViewersCommand(client.getName() + " has joined the game");
 		} else if (client.getType().equalsIgnoreCase(VIEWER)) { //Is a Viewer
-			String board1 = (player1 == null ? new Board().ownView()
-					: player1.board.ownView());
-			String board2 = (player2 == null ? new Board().ownView()
-					: player2.board.ownView());
+			String board1 = (player1 == null ? new Board().oponentView()
+					: player1.board.oponentView());
+			String board2 = (player2 == null ? new Board().oponentView()
+					: player2.board.oponentView());
 			Command command = generateViewerDrawCommand(board1, board2,
 					"Welcome to Battleships, You have been joined as a Viewer");
 			this.sendCommand(client, command.toString());
