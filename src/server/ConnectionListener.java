@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * Separate Thread that listen to new Connection
+ * Creates a new Client for every Connection Attempt
+ */
 public class ConnectionListener extends Thread {
 	public void run() {
 		int port = 54321;
