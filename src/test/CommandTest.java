@@ -3,7 +3,16 @@ import org.junit.* ;
 import static org.junit.Assert.* ;
 import util.*;
 
+/**
+ * Tests for the Command class
+ * 
+ * @author vic
+ */
 public class CommandTest {	
+	
+	/**
+	 * Tests it can convert a command string to a command object
+	 */
 	@Test
 	public void should_parse_command(){
 		String commandStr = "command:join&options:p,v";
@@ -12,6 +21,9 @@ public class CommandTest {
 		assertTrue(command.get("options").equals("p,v"));
 	}
 	
+	/**
+	 * Test it can covert the object to string its string representation 
+	 */
 	@Test
 	public void should_convert_to_string(){
 		String commandStr = "command:join&options:p,v";
