@@ -383,43 +383,6 @@ public class BattleshipsController {
 			//All the ships have been placed
 			if (shipType.equalsIgnoreCase("battleship")) { 
 				allShipsPlaced(client);
-//				// TODO Move to different method
-//				System.out
-//						.println("String board2 = getEnemy(client).board.oponentView();");
-//
-//				sendCommand(client,
-//						generateDrawCommand(client.board.ownView(),
-//								(new Board()).oponentView(), null).toString());
-//				System.out
-//						.println("sendCommand(client, generateDrawCommand(client.board.ownView(), board2, null).toString());");
-//
-//				client.isReady = true;
-//
-//				if (player1.isReady) { // player1 is ready
-//					if (player2 == null) {
-//						sendCommand(
-//								player1,
-//								generateWaitCommand(
-//										"Waiting for your oponent")
-//										.toString());
-//					} else if (player2.isReady) {
-//						System.out.println("player2.isReady");
-//						viewersMsg = "The Battle has just Begun";
-//						sendViewersCommand(viewersMsg);
-//						startGame();
-//					} else { // player2 is not ready
-//						sendCommand(
-//								player1,
-//								generateWaitCommand(
-//										"wait other player to position")
-//										.toString());
-//					}
-//				} else if (player2.isReady) {
-//					sendCommand(
-//							player2,
-//							generateWaitCommand("wait other player to position")
-//									.toString());
-//				}
 			}
 
 		} catch (Exception e) {
