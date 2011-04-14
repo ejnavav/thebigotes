@@ -6,31 +6,52 @@ import server.*;
 import client.*;
 import util.*;
 
+/**
+ * 
+ * Tests for the BattleShipServer class
+ * All the tests use real socket communication
+ * between the server and the client
+ * 
+ * @author Victor Nava
+ *
+ */
 public class BattleShipsServerTest {
 
     BattleShipsServer server = null;
-    // String host = "localhost";
-    String host = "10.1.1.6";
-    int port = 54321;
+    String host = "localhost";
 
+    /**
+     * Test if two clients can connect
+     */
     @Test
     public void accepts_multiple_client_connection() {
-        System.out.println("accepts_multiple_client_connection");            
+    	System.out.println("accepts_multiple_client_connection");
+    	int port = 54321;
+    	BattleShipsServer server = new BattleShipsServer(port);
+    	server.start();
+    	try{Thread.sleep(100);}catch (Exception e) {}; //wait a bit
         BattleShipsClient client1 = new BattleShipsClient(host, port);
         BattleShipsClient client2 = new BattleShipsClient(host, port);
         assertTrue(client1.connect());
         assertTrue(client2.connect());
-    } 
-
+    }
+    
+    /**
+     * Test if two players can join
+     */
     @Test
     public void two_player_can_join() {
         System.out.println("two_player_can_join()");
+        int port = 54322;
+    	BattleShipsServer server = new BattleShipsServer(port);
+    	server.start();
+    	try{Thread.sleep(100);}catch (Exception e) {}; //wait a bit
         BattleShipsClient client1 = new BattleShipsClient(host, port);
         BattleShipsClient client2 = new BattleShipsClient(host, port);
         try{
             client1.connect();
             client2.connect();
-
+            
             Command command = client1.waitForCommand();
             assertTrue(command.type().equals("join"));
             client1.sendMessage("command:join&as:p");
@@ -48,8 +69,16 @@ public class BattleShipsServerTest {
         }
     }
 
+    /**
+     * Test if a player can position all the ships
+     */
     @Test
     public void should_position_ships() {
+    	int port = 54323;
+    	BattleShipsServer server = new BattleShipsServer(port);
+    	server.start();
+    	try{Thread.sleep(100);}catch (Exception e) {}; //wait a bit
+    	
         System.out.println("should_position_ships");
         BattleShipsClient client =  new BattleShipsClient(host, port);
         assertTrue(client.connect());

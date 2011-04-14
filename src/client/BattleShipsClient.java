@@ -3,17 +3,41 @@ import java.util.*;
 import util.*;
 import server.*;
 
+/**
+ * The battleships client class which connects
+ * to the battleship server to play the game.
+ * 
+ * This class is a very thin client that simply executes
+ * commands send from the server. It doesn't have any
+ * game logic and it doesn't keep any state of the game
+ * either.
+ * 
+ * @author John Kolovos
+ * @author Victor Nava
+ * 
+ */
 public class BattleShipsClient {
-    private Communicator server = null;
     
-    //TODO setUser() and pass it an InputStream to test
+	private Communicator server = null;
     private Scanner user = new Scanner(System.in);
     private boolean imViewer = true;
-
+    
+    
+    /**
+     * Starts a new communicator
+     * @param host
+     * @param port
+     */
     public BattleShipsClient(String host, int port){
         server = new Communicator(host, port);
     }
     
+    
+    /**
+     * The method to start the client.
+     * Tries to connect to server and just waits for commands
+     * Sent from server
+     */
     public void run(){
         System.out.println("Welcome to Battleships");
         System.out.println("Connecting to server...");
@@ -34,15 +58,29 @@ public class BattleShipsClient {
         }
     }
     
+    /**
+     * Connect to the server
+     * 
+     * @return true if connection ok, false otherwise
+     */
     public boolean connect(){
         return server.connect();
     }
     
+    /**
+     * Sends a message/command to the server
+     * 
+     * @param message
+     */
 	public void sendMessage(String message){
-	    // System.out.println("sending to server: "+ message);
 	    server.sendMessage(message);
 	}
 	
+	/**
+	 * Keeps waiting until a command from server is received
+	 * 
+	 * @return Command from server
+	 */
     public Command waitForCommand(){
         String commandStr = server.waitForMessage();
         Command command = null;
@@ -54,6 +92,13 @@ public class BattleShipsClient {
         return command;
     }
 
+    /**
+     * When a command from server this method is called
+     * to handle the command, it is responsible to decide 
+     * what to do with it.
+     * 
+     * @param command 
+     */
     public void handleCommand(Command command){
         // System.out.println("handling command");
 
@@ -79,9 +124,14 @@ public class BattleShipsClient {
         else {
             System.out.println("Don't know about command" +command.toString());
         }
-        // System.out.println("done handling command");
     }
 
+    /**
+     * Asks the user to enter how they want to join
+     * then sends the join reply to the server
+     * 
+     * @param command
+     */
     public void join(Command command){
         System.out.println(command.get("message"));
         String[] options = command.get("options").split(",");
@@ -92,6 +142,13 @@ public class BattleShipsClient {
         server.sendMessage(reply.toString());
     }
     
+    /**
+     * Asks the user to enter the location and orientation
+     * to position one ship in the board, then sends a position
+     * reply to the server with the position info.
+     * 
+     * @param command
+     */
     public void position(Command command){
         drawGrid(command.get("board1"), command.get("board2"));
         System.out.println(command.get("message"));
@@ -120,7 +177,13 @@ public class BattleShipsClient {
         reply.put("orientation", orientation);
         server.sendMessage(reply.toString());
     }
-         
+    
+    
+    /**
+     * Displays the two boards and an alternative message 
+     * 
+     * @param command
+     */
     public void draw(Command command){
         String board1 = command.get("board1");
         String board2 = command.get("board2");
@@ -132,7 +195,13 @@ public class BattleShipsClient {
             System.out.println(command.get("message"));
         }
     }
-        
+    
+    
+    /**
+     * Asks the user for a location to fire
+     * 
+     * @param command
+     */
     public void fire(Command command){
         drawGrid(command.get("board1"), command.get("board2"));
         System.out.println(command.get("message"));
@@ -157,10 +226,22 @@ public class BattleShipsClient {
         server.sendMessage(reply.toString());
     }
     
+    /**
+     * Just prints a message and do nothing
+     * 
+     * @param command
+     */
     public void wait(Command command){
         System.out.println(command.get("message"));
     }
     
+    
+    /**
+     * Displays a the gameover message, sends a gameover
+     * reply to the server then closes the app.
+     * 
+     * @param command
+     */
     public void gameover(Command command){
         System.out.println(command.get("message"));
         sendMessage("command:gameover");
@@ -168,6 +249,18 @@ public class BattleShipsClient {
         System.exit(0);
     }
     
+    
+    /**
+     * Displays the boards
+     *
+     * It accepts two board-strings as argument.
+     * Each boards is a 32 char long where a char
+     * represents either a ship, a hit or a miss
+     * in the board.
+     *
+     * @param player1 board String
+     * @param player2 board String
+     */
     public void drawGrid(String player1,String player2){
         player1 = player1.replace('#',' ');
         player2 = player2.replace('#',' ');
@@ -217,6 +310,13 @@ public class BattleShipsClient {
         System.out.println(printString);
     }
 
+    /**
+     * Prompts the user to enter an option until
+     * the option is a valid.
+     * 
+     * @param options an Array of all posible options
+     * @return a valid option String
+     */
     public String readValidOption(String[] options){
         boolean optionIsInvalid = true;
         String option = null;
@@ -236,6 +336,13 @@ public class BattleShipsClient {
         return option;
     }
 
+    /**
+     * The main methods that runs the app
+     * It accepts the host as first argument
+     * and port number as second argument
+     * 
+     * @param args An array of options
+     */
     public static void main(String[] args) {
         String host = (args.length > 0) ? args[0] : "localhost";
         int port = (args.length > 1) ? Integer.parseInt(args[1]) : 54321;

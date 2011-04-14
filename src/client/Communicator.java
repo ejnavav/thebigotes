@@ -3,18 +3,37 @@ package client;
 import java.io.*;
 import java.net.*;
 
+
+/**
+ * Class in charge of all the communication with the client
+ * It sends a receives messages using a socket connection.
+ * 
+ * @author John Kolovos
+ * 
+ */
 public class Communicator {
 	String host;
 	int port;
 	Socket socket = null;
 	PrintWriter out = null;
 	BufferedReader in = null;
-
+	
+	
+	/**
+	 * Constructor 
+	 * @param host to connect
+	 * @param port to connect
+	 */
 	public Communicator(String host, int port) {
 		this.host = host;
 		this.port = port;
 	}
-
+	
+	/**
+	 * Make a socket connection with the server
+	 * 
+	 * @return true if it can connect false otherwise
+	 */
 	public boolean connect() {
 		try {
 			socket = new Socket(host, port);
@@ -30,6 +49,9 @@ public class Communicator {
 		return true;
 	}
 
+	/**
+	 * Closes the socket connection
+	 */
 	public void disconnect() {
 		try {
 			out.close();
@@ -40,6 +62,12 @@ public class Communicator {
 		}
 	}
 	
+	
+	/**
+	 * Waits until there is a string (message) in the socket
+	 * 
+	 * @return the message received
+	 */
 	public String waitForMessage(){
 		String msg = null;
 		try{
@@ -50,6 +78,10 @@ public class Communicator {
 		return msg;
 	}
 
+	/**
+	 * Sends a message
+	 * @param message
+	 */
 	public void sendMessage(String message){
 		try {
 			out.println(message);
@@ -57,7 +89,11 @@ public class Communicator {
 			System.err.println(e.getMessage());
 		}
 	}
-
+	
+	/**
+	 * Test harness 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		Communicator client = new Communicator("localhost", 54321);
 		client.connect();
