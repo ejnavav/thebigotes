@@ -3,6 +3,7 @@ package server;
 import java.net.*;
 import java.io.*;
 /**
+ * @author Victor
  * The Thread that listen to clients requests
  */
 public class ClientListener extends Thread {
@@ -23,7 +24,8 @@ private Client client;
 			String input = in.readLine();
 			System.out.println("Received from Client: "+ input);
 			if (input==null)return;
-			if (input.length()>0) BattleShipsServer.gameController.processClientCommand(client, input);
+//			if (input.length()>0) BattleShipsServer.gameController.processClientCommand(client, input);
+			if (input.length()>0) client.receiveCommand(input);
 			
 		}
 		}catch(Exception e){

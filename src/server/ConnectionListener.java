@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
+ * @author Eduardo Nava
  * Separate Thread that listen to new Connection
  * Creates a new Client for every Connection Attempt
  */

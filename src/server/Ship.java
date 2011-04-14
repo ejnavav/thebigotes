@@ -2,6 +2,7 @@ package server;
 import java.util.* ;
 
 /**
+ * @author Victor
  * Hold information about a Ship
  *
  */

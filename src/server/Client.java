@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
+ * @author Victor Nava
  * Holds Informaton about a Client and performs operations on them
  * used to send/receive messages from a client
  *
@@ -19,6 +20,7 @@ public class Client {
 	public boolean hasTurn = false;
 	ClientListener clientListener;
 	String name;
+	Protocol protocol;
 	
 	//Receives the Socket created by the connection listener
 	public Client(Socket socket) {
@@ -32,6 +34,7 @@ public class Client {
 		System.out.println("After Thread Start");
 		
 		this.board = new Board();
+		this.protocol = new Protocol();
 	}
 	
 	/**
@@ -45,12 +48,18 @@ public class Client {
 	 */
 	public void setName(String name){this.name=name;}
 	
+	public void receiveCommand(String command){
+		if (protocol.isValidCommand(command)){
+			BattleShipsServer.gameController.processClientCommand(this, command);
+		}
+	}
 	/**
 	 * Sends commands to the client
 	 * @param command
 	 * @throws Exception
 	 */
 	public void sendCommand(String command) throws Exception {
+		protocol.setLastCommand(command);
 		out.println(command);
 	}
 	/**

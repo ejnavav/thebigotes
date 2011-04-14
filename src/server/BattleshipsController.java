@@ -5,6 +5,8 @@ import java.util.*;
 import util.*;
 
 /**
+ * @author Victor Nava
+ * @author Eduardo Nava
  * 	Class that holds the Game State and the game Rules
  *	Controls the flow of the game
  *	Process commands received from the Clients
